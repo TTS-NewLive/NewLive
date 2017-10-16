@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_all_pub">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/ui_10_dip"
+        android:layout_marginRight="@dimen/ui_10_dip"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/price_button">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="宝贝名称："
+                android:textColor="@color/text_color" />
+
+            <EditText
+                android:id="@+id/goods_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="至多10个字"
+                android:maxLines="1"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/hint_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="简单介绍："
+                android:textColor="@color/text_color" />
+
+            <EditText
+                android:id="@+id/goods_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="至多50个字"
+                android:maxLines="3"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/hint_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="出售方式："
+                android:textColor="@color/text_color" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ui_10_dip"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/fixed_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawableLeft="@drawable/bg_radio"
+                    android:drawablePadding="@dimen/ui_5_dip"
+                    android:text="一口价"
+                    android:textColor="@color/text_color" />
+
+                <RadioButton
+                    android:id="@+id/negotiable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/bg_radio"
+                    android:drawablePadding="@dimen/ui_5_dip"
+                    android:text="可议价"
+                    android:textColor="@color/text_color" />
+
+                <RadioButton
+                    android:id="@+id/auction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/bg_radio"
+                    android:drawablePadding="@dimen/ui_5_dip"
+                    android:text="竞拍"
+                    android:textColor="@color/text_color" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/auction_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="起  拍  价：            "
+                    android:textColor="@color/text_color" />
+
+                <EditText
+                    android:id="@+id/goods_jp_baseprice"
+                    android:layout_width="@dimen/goods_edit"
+                    android:layout_height="wrap_content"
+                    android:hint="请输入起拍价格"
+                    android:inputType="number"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/hint_color" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" ￥"
+                    android:textColor="@color/text_color" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="每次加价不少于："
+                    android:textColor="@color/text_color" />
+
+                <EditText
+                    android:layout_width="@dimen/goods_edit"
+                    android:layout_height="wrap_content"
+                    android:hint="请输入最低加价"
+                    android:inputType="number"
+                    android:id="@+id/goods_jp_minadd"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/hint_color" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" ￥"
+                    android:textColor="@color/text_color" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/kyj_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="参   考   价："
+                android:textColor="@color/text_color" />
+
+            <EditText
+                android:id="@+id/goods_kyj_price"
+                android:layout_width="@dimen/goods_edit"
+                android:layout_height="wrap_content"
+                android:digits="0123456789."
+                android:hint="请参考价格"
+                android:inputType="number"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/hint_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" ￥"
+                android:textColor="@color/text_color" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/price_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="售        价："
+                android:textColor="@color/text_color" />
+
+            <EditText
+                android:id="@+id/goods_price"
+                android:layout_width="@dimen/goods_edit"
+                android:layout_height="wrap_content"
+                android:digits="0123456789."
+                android:hint="请输入商品价格"
+                android:inputType="number"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/hint_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" ￥"
+                android:textColor="@color/text_color" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ui_5_dip"
+            android:layout_marginLeft="@dimen/ui_2_dip"
+            android:layout_marginRight="@dimen/ui_2_dip"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/ui_10_dip">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_crop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/price_button"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/ui_5_dip"
+        android:layout_marginLeft="@dimen/ui_10_dip"
+        android:layout_marginRight="@dimen/ui_10_dip"
+        android:background="@drawable/btn_bg"
+        android:text="发布"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

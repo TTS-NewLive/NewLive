@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/ui_10_dip"
+    android:paddingBottom="@dimen/ui_10_dip">
+
+    <com.thinkcool.circletextimageview.CircleTextImageView
+        android:id="@+id/goldTask_image"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="@dimen/ui_10_dip"
+        android:layout_marginRight="@dimen/ui_10_dip"
+        app:citv_border_width="2dp"
+        app:citv_text_padding="30dp"
+        app:citv_text_size="18sp" />
+
+    <LinearLayout
+        android:id="@+id/goldTask_ll"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/goldTask_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ui_5_dip"
+            android:textColor="@color/black"
+            android:textSize="14dp" />
+        <TextView
+            android:id="@+id/goldTask_content"
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/goldTask_get"
+        android:layout_width="48dp"
+        android:layout_height="21dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:background="@color/gray"
+        android:clickable="false"
+        android:text="+5金币"
+        android:textColor="@color/white"
+        android:textSize="12dp" />
+</LinearLayout>

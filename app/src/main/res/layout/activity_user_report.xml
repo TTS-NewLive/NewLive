@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/side_nav_bar"
+    android:layout_height="match_parent"
+    tools:context="com.xiaoyu.schoolelive.activities.UserReportActivity">
+
+    <include
+        android:id="@+id/userReportTB"
+        layout="@layout/include_toolbar"/>
+    <EditText
+        android:id="@+id/userReportET"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/bg_edittext"
+        android:layout_margin="@dimen/ui_10_dip"
+        android:padding="@dimen/ui_10_dip"
+        android:maxLines="5"
+        android:gravity="top"
+        android:hint="请输入您宝贵的意见！"
+        android:layout_below="@+id/userReportTB"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/userReportBtn"
+        android:background="@drawable/btn_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/btn_height"
+        android:layout_marginLeft="@dimen/ui_10_dip"
+        android:layout_marginRight="@dimen/ui_10_dip"
+        android:text="提交"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:layout_below="@+id/userReportET"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>

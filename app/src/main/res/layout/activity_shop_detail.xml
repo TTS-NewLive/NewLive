@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent">-->
+
+<!--<ScrollView--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content">-->
+
+<!--<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent">-->
+
+<!--<include--><!--android:id="@+id/include2"--><!--layout="@layout/include_toolbar" />--><!--<RelativeLayout--><!--android:layout_gravity="center"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content">--><!--<ImageView--><!--android:id="@+id/shop_detail_image"--><!--android:src="@drawable/nav_photo"--><!--android:layout_width="200dp"--><!--android:layout_height="240dp"--><!--android:layout_alignParentTop="true"--><!--android:layout_centerHorizontal="true" />--><!--<LinearLayout--><!--android:id="@+id/ll"--><!--android:layout_centerHorizontal="true"--><!--android:layout_below="@id/shop_detail_image"--><!--android:orientation="horizontal"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content">--><!--<ImageView--><!--android:background="@drawable/ic_menu_share"--><!--android:layout_width="24dp"--><!--android:layout_height="24dp" />-->
+
+<!--<TextView--><!--android:id="@+id/shop_detail_price"--><!--android:layout_width="wrap_content"--><!--android:layout_height="match_parent"--><!--android:layout_marginLeft="20dp" />--><!--</LinearLayout>--><!--<Button--><!--android:id="@+id/shop_detail_change"--><!--android:layout_below="@id/ll"--><!--android:text="兑换"--><!--android:layout_marginLeft="10dp"--><!--android:layout_marginRight="10dp"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content" />--><!--</RelativeLayout>-->
+
+
+<!--<LinearLayout--><!--android:layout_marginTop="5dp"--><!--android:layout_marginLeft="5dp"--><!--android:layout_marginRight="5dp"--><!--android:orientation="horizontal"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content">--><!--<TextView--><!--android:textSize="16dp"--><!--android:text="商品名称:"--><!--android:textStyle="bold"--><!--android:textAlignment="center"--><!--android:layout_width="100dp"--><!--android:layout_height="wrap_content" />--><!--<TextView--><!--android:id="@+id/shop_detail_name"--><!--android:textSize="14dp"--><!--android:maxLength="16"--><!--android:text="asdasd"--><!--android:textAlignment="center"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_weight="5"/>--><!--</LinearLayout>-->
+
+<!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_marginLeft="5dp"--><!--android:layout_marginRight="5dp"--><!--android:layout_marginTop="5dp"--><!--android:orientation="horizontal">-->
+
+<!--<TextView--><!--android:layout_width="100dp"--><!--android:layout_height="wrap_content"--><!--android:text="商品介绍:"--><!--android:textAlignment="center"--><!--android:textSize="16dp"--><!--android:textStyle="bold" />-->
+
+<!--<TextView--><!--android:id="@+id/shop_detail_content"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:text="asdas\nasdasd\nasdasd\n"--><!--android:textSize="14dp" />--><!--</LinearLayout>-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/include_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="56dp"
+            android:orientation="vertical">
+            <!--商品图片包含商品名称-->
+            <cn.bingoogolapple.bgabanner.BGABanner
+                android:id="@+id/shop_images"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:banner_pageChangeDuration="1000"
+                app:banner_pointAutoPlayAble="false"
+                app:banner_pointContainerBackground="@android:color/transparent"
+                app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
+                app:banner_pointTopBottomMargin="15dp"
+                app:banner_tipTextSize="50px"
+                app:banner_transitionEffect="alpha" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ui_10_dip"
+                android:orientation="vertical">
+                <!--价格-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="@dimen/ui_5_dip"
+                        android:src="@drawable/ic_shop_goldcoin16" />
+
+                    <TextView
+                        android:id="@+id/shop_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/ui_5_dip"
+                        android:text="2000"
+                        android:textColor="@color/shop_exchange"
+                        android:textSize="70px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" +¥"
+                        android:textColor="@color/shop_exchange" />
+
+                    <TextView
+                        android:id="@+id/shop_money"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="130"
+                        android:textColor="@color/shop_exchange"
+                        android:textSize="50px" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/view_color" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+                    <!--商品简介-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/ui_10_dip"
+                        android:drawableLeft="@drawable/ic_shop_intro24"
+                        android:paddingBottom="@dimen/ui_10_dip"
+                        android:text="  商品简介"
+                        android:textColor="@color/black"
+                        android:textSize="38px" />
+
+                    <TextView
+                        android:id="@+id/shop_intro"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="xxxxxxxxxxxxxxx\nxxxxxxxxxxxx\n"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+                    <!--兑换信息-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_shop_content24"
+                        android:paddingBottom="@dimen/ui_10_dip"
+                        android:text="  兑换信息"
+                        android:textColor="@color/black"
+                        android:textSize="38px" />
+
+                    <TextView
+                        android:id="@+id/shop_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="xxxxxxxxxxxxxxx\nxxxxxxxxxxxx\n"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/shop_tip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="温馨提示：\n\n校园e生活有权在法律允许的范围内对活动规则进行解释"
+                        android:textColor="@color/hint_color" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1">-->
+
+            <!--</LinearLayout>-->
+
+        </LinearLayout>
+
+    </ScrollView>
+    <!--兑换按钮-->
+    <Button
+        android:id="@+id/shop_exchange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/shop_exchange"
+        android:text="兑换"
+        android:textColor="@color/white"
+        android:textSize="50px" />
+</RelativeLayout>

@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp" >
+    <Spinner
+        android:id="@+id/spin_province"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/spin_city"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:id="@+id/spin_county"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/spin_button"
+        android:layout_width="66dp"
+        android:layout_height="40dp"
+        android:background="@drawable/side_nav_bar"
+        android:textColor="#ffffff"
+        android:text="确定"
+        android:textSize="16dp"
+        android:layout_below="@+id/spin_county"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="120dp" />
+</RelativeLayout>

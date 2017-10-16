@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    tools:context="com.xiaoyu.schoolelive.activities.SystemSettingActivity">
+    <include
+        android:id="@+id/syssetToolBar"
+        layout="@layout/include_toolbar" />
+    <ListView
+        android:id="@+id/systemSetting_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffff"
+        android:divider="@color/themecolor"
+        android:dividerHeight="3dp"
+        android:drawSelectorOnTop="true"
+        android:layout_below="@id/syssetToolBar">
+    </ListView>
+    <Button
+        android:id="@+id/sysset_back_login"
+        android:layout_margin="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/systemSetting_listview"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/btn_bg"
+        android:text="退出登录"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/order"
+            android:icon="@drawable/ic_foot32"
+            android:title="订单历史" />
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/ic_foot32"
+            android:title="我的足迹" />
+        <item
+            android:id="@+id/report"
+            android:icon="@drawable/ic_report32"
+            android:title="用户反馈" />
+        <item
+            android:id="@+id/SystemSetting"
+            android:icon="@drawable/ic_sys_set32"
+            android:title="系统设置" />
+    </group>
+</menu>

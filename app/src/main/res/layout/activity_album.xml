@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_hot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/side_nav_bar"
+    android:orientation="vertical">
+    <!--<include-->
+    <!--layout="@layout/include_publish_list"/>-->
+    <include
+        layout="@layout/include_toolbar"/>
+    <CheckBox
+        android:id="@+id/cb_album_list_downloadable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:checked="true"
+        android:text="预览图片时显示保存图片按钮"
+        android:textColor="@color/colorPrimary"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_album_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" />
+
+
+</LinearLayout>

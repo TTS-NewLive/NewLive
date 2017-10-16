@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical"
+    tools:context="com.xiaoyu.schoolelive.activities.UserAddMsgActivity">
+
+    <include layout="@layout/include_toolbar" />
+
+    <EditText
+        android:paddingLeft="@dimen/ui_10_dip"
+        android:id="@+id/add_msg_textContent"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:paddingTop="@dimen/ui_10_dip"
+        android:paddingBottom="@dimen/ui_5_dip"
+        android:gravity="top"
+        android:background="@color/bg_all_pub"
+        android:textColorHint="@color/hint_color"
+        android:hint="分享新鲜事"
+        android:maxLength="140"
+        android:maxLines="8"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:paddingBottom="@dimen/ui_5_dip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_all_pub"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="@dimen/ui_10_dip">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="剩余 " />
+
+            <TextView
+                android:id="@+id/add_msg_textNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/textNum" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 个字" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/ui_10_dip"
+            android:gravity="right">
+
+            <Button
+                android:background="@drawable/btn_bg"
+                android:id="@+id/postButton"
+                android:textColor="@color/white"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_gravity="right"
+                android:text="发送" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ui_10_dip"
+        android:background="@color/gray"></View>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_all_pub"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+
+        <ImageView
+            android:background="@color/bg_edit"
+            android:id="@+id/iv_crop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

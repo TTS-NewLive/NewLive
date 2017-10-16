@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="simpleBlue" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">?android:attr/statusBarColor</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/simple_blue</item>
+    </style>
+
+    <style name="simpleBlue." parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/simple_blue</item>
+        <item name="android:statusBarColor">?android:attr/colorPrimary</item>
+    </style>
+</resources>

@@ -1,0 +1,88 @@
+<resources>
+    <string name="app_name">SchoolELive</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+
+    <string name="prompt_userword">账号：</string>
+    <string name="prompt_password">密码：</string>
+    <string name="action_sign">登录</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_regist">注册</string>
+    <string name="error_invalid_userword">账号错误！</string>
+    <string name="error_invalid_password">密码太短！</string>
+    <string name="error_incorrect_password">密码错误！</string>
+    <string name="error_field_required">不能为空</string>
+
+
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+
+    <string name="title_secondhand">淘一淘</string>
+    <string name="title_sysinform">通知</string>
+    <string name="textNum">140</string>
+
+    <!--兼职类型-->
+    <!--演员-->
+    <string name="yanyuan">演员</string>
+    <!--销售-->
+    <string name="xiaoshou">销售</string>
+    <!--保安-->
+    <string name="baoan">安保</string>
+    <!--发传单-->
+    <string name="fachuandan">派单</string>
+    <!--外卖-->
+    <string name="waimai">外卖</string>
+    <!--快递-->
+    <string name="kuaidi">快递</string>
+    <!--推广-->
+    <string name="tuiguang">推广</string>
+    <!--网络-->
+    <string name="wangluo">网络</string>
+    <!--家教-->
+    <string name="jiajiao">家教</string>
+    <!--工厂-->
+    <string name="gongchang">工厂</string>
+    <!--服务员-->
+    <string name="fuwuyuan">服务员</string>
+    <!--校园-->
+    <string name="xiaoyuan">校内</string>
+    <!--其他-->
+    <string name="qita">其他</string>
+
+    <!--工资计算方式-->
+    <string name="perhour"> 元/小时</string>
+    <string name="perday"> 元/天</string>
+    <string name="permonth"> 元/月</string>
+    <string name="perpiece"> 元/件</string>
+    <string name="peritem"> 元/单</string>
+    <!--工资结算方式-->
+    <string name="daypaid"> 日结 </string>
+    <string name="weekpaid"> 周结 </string>
+    <string name="monthpaid"> 月结 </string>
+    <string name="afterworkpaid"> 完工结算 </string>
+
+    <string name="sign">签到</string>
+    <string name="sign_succeed_today">今日签到成功，增加积分</string>
+    <string name="sure">确定</string>
+    <string name="have_signed">已签到</string>
+    <string name="much_score_int">%1$d 分</string>
+    <string name="you_have_sign"><Data><![CDATA[<font color="%1$s">您已连续签到 </font><font color="%2$s">%3$d</font> <font color="%1$s">天，累计获得积分</font>]]></Data></string>
+
+    <string-array name="month_array">
+        <item>一月</item>
+        <item>二月</item>
+        <item>三月</item>
+        <item>四月</item>
+        <item>五月</item>
+        <item>六月</item>
+        <item>七月</item>
+        <item>八月</item>
+        <item>九月</item>
+        <item>十月</item>
+        <item>十一月</item>
+        <item>十二月</item>
+    </string-array>
+</resources>

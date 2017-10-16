@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/bg_all_pub"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/ui_3_dip"
+                    android:text="兼职名称：" />
+
+                <EditText
+                    android:id="@+id/pub_workName"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_edittext"
+                    android:paddingBottom="@dimen/ui_3_dip"
+                    android:paddingLeft="@dimen/ui_10_dip"
+                    android:paddingRight="@dimen/ui_10_dip"
+                    android:paddingTop="@dimen/ui_3_dip" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="类型：" />
+
+                <Spinner
+                    android:id="@+id/workTypeOptions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:dropDownWidth="100dp"
+                    android:entries="@+array/workTypeOptions"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="工资：" />
+
+                <EditText
+                    android:id="@+id/pub_workWages"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_edittext"
+                    android:inputType="number"
+                    android:paddingBottom="@dimen/ui_3_dip"
+                    android:paddingLeft="@dimen/ui_5_dip"
+                    android:paddingRight="@dimen/ui_5_dip"
+                    android:paddingTop="@dimen/ui_3_dip" />
+
+                <Spinner
+                    android:id="@+id/wagesTypeOptions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:entries="@+array/wagesTypeOptions"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="结算方式：" />
+
+                <Spinner
+                    android:id="@+id/wagesPayOptions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@+array/workPayOptions"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="招聘人数：" />
+
+                <EditText
+                    android:id="@+id/pub_workManNeed"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_edittext"
+                    android:inputType="number"
+                    android:paddingBottom="@dimen/ui_3_dip"
+                    android:paddingLeft="@dimen/ui_10_dip"
+                    android:paddingRight="@dimen/ui_10_dip"
+                    android:paddingTop="@dimen/ui_3_dip" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ui_5_dip"
+                    android:text="人" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="待遇：" />
+
+                <CheckBox
+                    android:id="@+id/allowance_Meal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="餐补" />
+
+                <CheckBox
+                    android:id="@+id/allowance_Live"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="住宿" />
+
+                <CheckBox
+                    android:id="@+id/allowance_Traffic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="交通补贴" />
+
+                <CheckBox
+                    android:id="@+id/allowance_Other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="其他" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="性别要求：" />
+
+                <Spinner
+                    android:id="@+id/pub_workSexNeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@+array/workSexNeed"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/ui_3_dip"
+                    android:text="工作地点：" />
+
+                <EditText
+                    android:id="@+id/pub_workPlace"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_edittext"
+                    android:paddingBottom="@dimen/ui_3_dip"
+                    android:paddingLeft="@dimen/ui_10_dip"
+                    android:paddingRight="@dimen/ui_10_dip"
+                    android:paddingTop="@dimen/ui_3_dip" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="工作日期：" />
+
+                <!--<Spinner-->
+                <!--android:id="@+id/workStartDate"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:entries="@+array/workStartDate" />-->
+                <Button
+                    android:id="@+id/pub_workStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/btn_height"
+                    android:background="@drawable/btn_date_select"
+                    android:text="起始日期"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" - " />
+
+                <Button
+                    android:id="@+id/pub_workEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/btn_height"
+                    android:background="@drawable/btn_date_select"
+                    android:text="结束日期"
+                    android:textColor="@color/white" />
+                <!--<Spinner-->
+                <!--android:id="@+id/workEndDate"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:entries="@+array/workEndDate" />-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="工作时段：" />
+
+                <!--<Spinner-->
+                <!--android:id="@+id/workStartHours"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:entries="@+array/workStartHours" />-->
+                <Button
+                    android:id="@+id/pub_workStartHours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/btn_height"
+                    android:background="@drawable/btn_time_select"
+                    android:text="上班时间"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" - " />
+
+                <Button
+                    android:id="@+id/pub_workEndHours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/btn_height"
+                    android:background="@drawable/btn_time_select"
+                    android:text="下班时间"
+                    android:textColor="@color/white" />
+                <!--<Spinner-->
+                <!--android:id="@+id/workEndHours"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:entries="@+array/workEndHours" />-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/ui_3_dip"
+                    android:text="工作要求：" />
+
+                <EditText
+                    android:id="@+id/pub_workNeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/bg_edittext"
+                    android:gravity="top"
+                    android:paddingLeft="@dimen/ui_10_dip"
+                    android:paddingRight="@dimen/ui_10_dip"
+                    android:paddingTop="@dimen/ui_5_dip"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="联系人：    " />
+
+                <EditText
+                    android:id="@+id/pub_workContactMan"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_edittext"
+                    android:paddingBottom="@dimen/ui_3_dip"
+                    android:paddingLeft="@dimen/ui_10_dip"
+                    android:paddingRight="@dimen/ui_10_dip"
+                    android:paddingTop="@dimen/ui_3_dip" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ui_5_dip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="联系方式：" />
+
+                <EditText
+                    android:id="@+id/pub_workContactNum"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_edittext"
+                    android:hint="请输入手机号码"
+                    android:inputType="number"
+                    android:paddingBottom="@dimen/ui_3_dip"
+                    android:paddingLeft="@dimen/ui_10_dip"
+                    android:paddingRight="@dimen/ui_10_dip"
+                    android:paddingTop="@dimen/ui_3_dip" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/pub_partJob"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/ui_5_dip"
+                android:background="@drawable/btn_bg"
+                android:text="发布"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

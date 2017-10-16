@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_secondhand"
+        android:icon="@drawable/ic_goods32"
+        android:title="@string/title_secondhand"
+        />
+
+    <item
+        android:id="@+id/navigation_sysinform"
+        android:icon="@drawable/ic_menu_inform32"
+        android:title="@string/title_sysinform" />
+
+</menu>

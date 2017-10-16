@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/changeinfo"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="修改资料"
+        app:showAsAction="always" />
+
+    <!--<item-->
+        <!--android:id="@+id/refresh"-->
+        <!--android:title="刷新"-->
+        <!--android:icon="@drawable/refresh"-->
+        <!--app:showAsAction="ifRoom"-->
+        <!--/>-->
+    <!--  showAsAction的几个取值：
+        1.always:永远显示在ToolBar中，如果屏幕空间不够则不显示
+        2.ifRoom:空间足够就显示ToolBar中，不足就显示在菜单中
+        3.never:永远显示在菜单中
+        需要注意的是，在ToolBar中，action按钮只会显示图片，在菜单中只会显示文字
+    -->
+</menu>

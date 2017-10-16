@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="1">
+    <!--android:descendantFocusability="blocksDescendants"-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/ui_10_dip">
+        <include layout="@layout/include_user_msg_head" />
+
+        <include layout="@layout/include_user_msg_content" />
+
+        <include layout="@layout/include_user_msg_buttom" />
+    </LinearLayout>
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_comment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/transparent">-->
+
+
+        <!--<EditText-->
+            <!--android:id="@+id/comment_content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginLeft="@dimen/ui_10_dip"-->
+            <!--android:layout_marginRight="@dimen/ui_10_dip"-->
+            <!--android:background="@drawable/bg_edittext"-->
+            <!--android:hint="评论"-->
+            <!--android:singleLine="true"-->
+            <!--android:paddingLeft="20dp"-->
+            <!--android:paddingRight="20dp"-->
+            <!--android:textSize="15sp" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/comment_send"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:background="@drawable/ic_msg_send"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="15sp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_alignEnd="@+id/comment_content"-->
+            <!--android:layout_marginEnd="13dp" />-->
+    <!--</RelativeLayout>-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/viewcolor" />
+</LinearLayout>

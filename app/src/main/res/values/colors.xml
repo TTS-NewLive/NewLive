@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="red">#FF0000</color>
+    <color name="dark">#FF222222</color>
+    <color name="light">#FFEEEEEE</color>
+    <color name="black">#000000</color>
+    <color name="blue">#303f9f</color>
+    <color name="transparent">#0000</color>
+    <color name="gray">#a9a99a</color>
+    <color name="mainColor">#4dc445</color>
+    <color name="white">#ffffff</color>
+    <color name="grey">#ececec</color>
+    <color name="txtgrey">#7c7b7b</color>
+    <color name="greywhite">#aeacac</color>
+    <color name="green">#00ff00</color>
+    <color name="view_color">#d3d3d3</color>
+    <color name="meihong">#DE1F73</color>
+    <color name="pink">#F699B4</color>
+    <color name="primary_dark">#ffaa44</color>
+    <color name="simple_green">#36D7B6</color>
+    <color name="simple_blue">#3dbff0</color>
+    <!--兼职类型-->
+    <!--演员-->
+    <color name="yanyuan">#248888</color>
+    <!--销售-->
+    <color name="xiaoshou">#E7475E</color>
+    <!--保安-->
+    <color name="baoan">#45405d</color>
+    <!--发传单-->
+    <color name="fachuandan">#445252</color>
+    <!--外卖-->
+    <color name="waimai">#F5AD4F</color>
+    <!--快递-->
+    <color name="kuaidi">#303f9f</color>
+    <!--推广-->
+    <color name="tuiguang">#C2390D</color>
+    <!--网络-->
+    <color name="wangluo">#32B9B5</color>
+    <!--家教-->
+    <color name="jiajiao">#CAB1AC</color>
+    <!--工厂-->
+    <color name="gongchang">#927076</color>
+    <!--服务员-->
+    <color name="fuwuyuan">#584B3F</color>
+    <!--校园-->
+    <color name="xiaoyuan">#48B8D0</color>
+    <!--其他-->
+    <color name="qita">#63b931</color>
+
+    <!--兼职工资结算类型-->
+    <!--日结-->
+    <color name="daypaid">#DE1F73</color>
+    <!--周结-->
+    <color name="weekpaid">#866667</color>
+    <!--月结-->
+    <color name="monthpaid">#f3b096</color>
+    <!--完工结算-->
+    <color name="afterworkpaid">#F05D5E</color>
+
+    <color name="kong">#00000000</color>
+    <color name="primary_material_light">#81c1ef</color>
+    <color name="statusColor">#81c1ef</color>
+    <color name="themecolor">#81c1ef</color>
+    <!--浮动按钮颜色-->
+    <color name="float_btn_normal">#96D986</color>
+    <color name="float_btn_press">#339BE6</color>
+
+    <color name="float_btn_publish">#3D8AD4</color>
+    <color name="float_btn_secondhand">#2E92DA</color>
+    <color name="float_btn_partjob">#57AEF1</color>
+    <color name="float_btn_inform">#76B4ED</color>
+    <color name="float_btn_share">#81C1EF</color>
+
+    <color name="all_button">#339BE6</color>
+
+    <color name="viewcolor">#ececec</color>
+
+    <!--日期选择-->
+    <color name="date_select">#f3b096</color>
+    <color name="time_select">#f3b096</color>
+
+    <color name="bg_edit">#E4EDF2</color>
+    <color name="bg_all_pub">#F5F1EE</color>
+    <color name="text_color">#747371</color>
+    <color name="hint_color">#BAB8B5</color>
+    <color name="goods_color">#F5AD4F</color>
+
+    <!--商店兑换主题颜色-->
+    <color name="shop_exchange">#BE974C</color>
+</resources>

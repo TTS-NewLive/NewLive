@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="workTypeOptions">
+        <!--其他-->
+        <item>其他</item>
+        <item>演员</item>
+        <!--销售-->
+        <item>销售</item>
+        <!--保安-->
+        <item>安保</item>
+        <!--发传单-->
+        <item>派单</item>
+        <!--外卖-->
+        <item>外卖</item>
+        <!--快递-->
+        <item>快递</item>
+        <!--推广-->
+        <item>推广</item>
+        <!--网络-->
+        <item>网络</item>
+        <!--家教-->
+        <item>家教</item>
+        <!--工厂-->
+        <item>工厂</item>
+        <!--服务员-->
+        <item>服务员</item>
+        <!--校园-->
+        <item>校内</item>
+    </string-array>
+
+    <string-array name="wagesTypeOptions">
+        <item>元/小时</item>
+        <item>元/天</item>
+        <item>元/月</item>
+        <item>元/件</item>
+        <item>元/单</item>
+    </string-array>
+
+    <string-array name="workPayOptions">
+        <item>日结</item>
+        <item>周结</item>
+        <item>月结</item>
+        <item>完工结算</item>
+    </string-array>
+    <string-array name="workSexNeed">
+        <item>不限</item>
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+</resources>

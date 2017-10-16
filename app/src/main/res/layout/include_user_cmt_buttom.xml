@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:orientation="horizontal">
+
+
+        <ImageButton
+            android:id="@+id/cmt_comment_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5px"
+            android:src="@drawable/comment_icon"
+            android:background="@color/transparent"/>
+
+        <TextView
+            android:id="@+id/cmt_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20px"
+            android:textColor="@color/black"
+            android:text="0"/>
+
+        <ImageButton
+            android:id="@+id/cmt_like_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5px"
+            android:src="@drawable/like_icon"
+            android:background="@color/transparent"/>
+
+        <TextView
+            android:id="@+id/cmt_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20px"
+            android:textColor="@color/black"
+            android:text="0"/>
+
+    </LinearLayout>
+</LinearLayout>

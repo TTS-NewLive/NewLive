@@ -1,0 +1,148 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listDivider">@drawable/divider_bg</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="simpleBlue." parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/simple_blue</item>
+    </style>
+
+    <style name="DialogNoTitle" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="windowNoTitle">true</item><!--除去title-->
+    </style>
+
+
+    <style name="actionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="actionBarSize">56dip</item>
+    </style>
+
+    <style name="customTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarTheme">@style/actionBarTheme</item>
+        <item name="colorPrimary">#38393E</item>
+        <item name="colorPrimaryDark">#2F3034</item>
+        <item name="actionBarSize">56dip</item>
+    </style>
+
+
+
+
+
+    <style name="MySettingText">
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_weight">6</item>
+    </style>
+
+    <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/check</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <declare-styleable name="Custom_User_Msg">
+        <attr name="msg_year" format="string" />
+        <attr name="msg_day" format="string" />
+        <attr name="msg_month" format="string" />
+        <attr name="msg_date" format="string" />
+        <attr name="msg_type" format="string" />
+        <attr name="words_msg" format="string" />
+        <attr name="icon_msg" format="integer|reference" />
+        <attr name="icon_msg2" format="integer|reference" />
+        <attr name="icon_msg3" format="integer|reference" />
+        <attr name="zhuanfa_icon" format="integer|reference" />
+        <attr name="comment_icon" format="integer|reference" />
+        <attr name="like_icon" format="integer|reference" />
+        <attr name="zhuanfa_count" format="string" />
+        <attr name="comment_count" format="string" />
+        <attr name="like_count" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="Custom_User_Album">
+        <attr name="photo_year" format="string" />
+        <attr name="photo_month" format="string" />
+        <attr name="photo_day" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="Custom_Bar">
+        <attr name="name_text" format="string" />
+        <attr name="info_text" format="string" />
+        <attr name="info_drawable" format="integer|reference" />
+        <attr name="right_drawable" format="integer|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+
+    //自定义对话框
+    <style name="text_18_ffffff">
+        <item name="android:textSize">18.0dip</item>
+        <item name="android:textColor">#ffffffff</item>
+    </style>
+
+    <style name="text_16_666666">
+        <item name="android:textSize">16.0dip</item>
+        <item name="android:textColor">#ff666666</item>
+    </style>
+
+    <style name="sdw_white">
+        <item name="android:shadowColor">#7fffffff</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">0.65</item>
+        <item name="android:shadowRadius">1.0</item>
+    </style>
+
+    <style name="sdw_79351b">
+        <item name="android:shadowColor">#ff79351b</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">1.0</item>
+        <item name="android:shadowRadius">1.0</item>
+    </style>
+
+    <style name="text_15_ffffff_sdw" parent="@style/sdw_79351b">
+        <item name="android:textSize">15.0dip</item>
+        <item name="android:textColor">#ffffffff</item>
+    </style>
+
+    <style name="text_15_666666_sdw" parent="@style/sdw_white">
+        <item name="android:textSize">15.0dip</item>
+        <item name="android:textColor">#ff666666</item>
+    </style>
+
+    <style name="cDialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="simpleBlue" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorAccent">?attr/colorAccent</item>
+        <item name="colorPrimaryDark">@color/simple_blue</item>
+    </style>
+</resources>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/sysSetAccount_tab"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="0,3">
+    <TableRow
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabRow_one">
+        <TextView />
+        <TextView
+            android:id="@+id/old_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="手机号:"
+            android:textSize="16sp" />
+            <EditText
+                android:labelFor="@id/old_password"
+            android:typeface="monospace"
+            android:hint="请输入手机号"
+            android:background="@null"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:maxLength="20"
+            android:password="true"/>
+        <TextView />
+    </TableRow>
+    <TableRow
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabRow_two">
+        <TextView />
+        <TextView
+            android:text="验证码:"
+            android:padding="3dp"
+            android:textSize="16sp"
+            android:id="@+id/new_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:labelFor="@id/old_password"
+            android:typeface="monospace"
+            android:background="@null"
+            android:layout_height="match_parent"
+            android:maxLength="20"
+            android:password="true"/>
+        <TextView />
+    </TableRow>
+    <LinearLayout
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <Button
+            android:id="@+id/changepass_true_button"
+            android:background="#81C1EF"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="确定"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/changepass_false_button"
+            android:background="#81C1EF"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="取消"/>
+    </LinearLayout>
+</TableLayout>

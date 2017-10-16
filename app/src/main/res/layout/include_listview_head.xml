@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.xiaoyu.schoolelive.custom.CustomUserPubMsg
+        android:id="@+id/comment_pubmsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.xiaoyu.schoolelive.custom.CustomUserPubMsg>
+    <LinearLayout
+        android:id="@+id/comment_bar1"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:background="@color/white"
+        android:orientation="vertical" >
+        <include
+            layout="@layout/include_comment_bar" />
+    </LinearLayout>
+
+</LinearLayout>

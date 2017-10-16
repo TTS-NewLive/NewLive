@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/activity_main_tv_main_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40px"
+        android:textSize="42px" />
+
+    <TextView
+        android:id="@+id/activity_main_tv_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40px"
+        android:textColor="#1b89cd"
+        android:textSize="95px" />
+
+    <LinearLayout
+        android:id="@+id/activity_main_ll_date"
+        android:layout_width="match_parent"
+        android:layout_height="130px"
+        android:layout_marginTop="54px"
+        android:background="#e9e9ea"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/activity_main_tv_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="43px"
+            android:layout_marginStart="43px"
+            android:textColor="#9c9c9c"
+            android:textSize="43px" />
+
+        <TextView
+            android:id="@+id/activity_main_tv_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="44px"
+            android:layout_marginStart="44px"
+            android:textColor="#9c9c9c"
+            android:textSize="43px" />
+    </LinearLayout>
+
+    <com.xiaoyu.schoolelive.custom.SignView
+        android:id="@+id/activity_main_cv"
+        android:layout_width="match_parent"
+        android:layout_height="818px" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/activity_main_btn_sign"
+        android:layout_width="match_parent"
+        android:layout_height="142px"
+        android:layout_marginLeft="42px"
+        android:layout_marginRight="42px"
+        android:layout_marginTop="111px"
+        android:text="@string/sign"
+        android:textColor="@color/white"
+        android:textSize="54px" />
+</LinearLayout>
