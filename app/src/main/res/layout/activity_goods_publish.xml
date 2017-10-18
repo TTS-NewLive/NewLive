@@ -197,7 +197,7 @@
                 android:layout_width="@dimen/goods_edit"
                 android:layout_height="wrap_content"
                 android:digits="0123456789."
-                android:hint="请参考价格"
+                android:hint="请输入参考价格"
                 android:inputType="number"
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/hint_color" />

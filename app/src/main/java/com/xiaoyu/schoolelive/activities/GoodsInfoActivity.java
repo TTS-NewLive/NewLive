@@ -78,7 +78,7 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     final String[] mItems = new String[]{"卖家详情", "关注卖家", "收藏宝贝", "分享宝贝", "举报"};
     final String[] mAgainstItems = new String[]{"泄露隐私", "人身攻击", "淫秽色情", "垃圾广告", "敏感信息", "其他"};
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             ACache aCache = ACache.get(getApplicationContext());
@@ -87,21 +87,22 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
             String goods_id = bundle.getString("goods_id");
             List<String> Image_List = new ArrayList<>();
             List<String> wordsList = new ArrayList<>();
-            try{
+            try {
                 JSONArray jsonArray = new JSONArray(goods_path);
-                aCache.put(goods_id+"",jsonArray,3*ACache.TIME_DAY);//将数据放到缓存中
-                for (int i = 0; i < jsonArray.length();i++){
+                aCache.put(goods_id + "", jsonArray, 3 * ACache.TIME_DAY);//将数据放到缓存中
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Log.i("iiii",ConstantUtil.SERVICE_PATH+ WidgetUtil.str_trim(jsonObject.getString("goods_path")));
-                    Image_List.add(ConstantUtil.SERVICE_PATH+ WidgetUtil.str_trim(jsonObject.getString("goods_path")));
+                    Log.i("iiii", ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(jsonObject.getString("goods_path")));
+                    Image_List.add(ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(jsonObject.getString("goods_path")));
                     wordsList.add("小雨科技");
                 }
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             mGoodsImages.setData(Image_List, wordsList);
         }
     };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods_info);
@@ -120,10 +121,10 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         setGoodsType(intent.getIntExtra("tmp_goodsType", 0));
 
         //设置商品名称
-        setGoodsName(intent.getIntExtra("tmp_goodsType", 0),intent.getStringExtra("tmp_goodsname"));
+        setGoodsName(intent.getIntExtra("tmp_goodsType", 0), intent.getStringExtra("tmp_goodsname"));
 
         //设置商品介绍
-        setGoodsIntro(intent.getIntExtra("tmp_goodsType", 0) ,intent.getStringExtra("tmp_intro"));
+        setGoodsIntro(intent.getIntExtra("tmp_goodsType", 0), intent.getStringExtra("tmp_intro"));
         //设置浏览量
         mGoodsPageViews.setText(intent.getStringExtra("tmp_pageViews"));
         //设置商品标签
@@ -183,33 +184,34 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
             }
         });
         ACache aCache = ACache.get(getApplicationContext());
-        if(aCache.getAsJSONArray(""+goods_id) != null){//如果缓存中存在,直接在缓存中读取
+        if (aCache.getAsJSONArray("" + goods_id) != null) {//如果缓存中存在,直接在缓存中读取
             List<String> Image_List = new ArrayList<>();
             List<String> wordsList = new ArrayList<>();
-            try{
-                JSONArray jsonArray = aCache.getAsJSONArray(""+goods_id);
-                for (int i = 0; i < jsonArray.length();i++){
+            try {
+                JSONArray jsonArray = aCache.getAsJSONArray("" + goods_id);
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Image_List.add(ConstantUtil.SERVICE_PATH+ WidgetUtil.str_trim(jsonObject.getString("goods_path")));
+                    Image_List.add(ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(jsonObject.getString("goods_path")));
                     wordsList.add("小雨科技");
                 }
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             mGoodsImages.setData(Image_List, wordsList);
-        }else {//缓存中不存在，向服务器发送请求
+        } else {//缓存中不存在，向服务器发送请求
             final RequestBody requestBody = new FormBody.Builder()
-                    .add("goods_id",goods_id)
+                    .add("goods_id", goods_id)
                     .build();
             HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "query_goods_image.php", requestBody, new Callback() {
                 public void onFailure(Call call, IOException e) {
 
                 }
+
                 public void onResponse(Call call, Response response) throws IOException {
                     Message msg = new Message();
                     Bundle bundle = new Bundle();
-                    bundle.putString("goods_id",goods_id);
-                    bundle.putString("goods_path",response.body().string());
+                    bundle.putString("goods_id", goods_id);
+                    bundle.putString("goods_path", response.body().string());
                     msg.setData(bundle);
                     handler.sendMessage(msg);
                 }
@@ -218,36 +220,39 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         }
 
 
-
     }
-    public void setGoodsName(int type,String goodsName){
+
+    public void setGoodsName(int type, String goodsName) {
         if (type == ConstantUtil.Goods_Type_pai) {
-            mGoodsName = (TextView)mGoodsPai.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsPai.findViewById(R.id.goods_name);
             mGoodsName.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_yj) {
-            mGoodsName = (TextView)mGoodsYJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYJ.findViewById(R.id.goods_name);
             mGoodsName.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_ykj) {
-            mGoodsName = (TextView)mGoodsYKJ.findViewById(R.id.goods_name);
-            mGoodsName.setText(goodsName);}
+            mGoodsName = (TextView) mGoodsYKJ.findViewById(R.id.goods_name);
+            mGoodsName.setText(goodsName);
+        }
 
     }
-    public void setGoodsIntro(int type,String goodsName){
+
+    public void setGoodsIntro(int type, String goodsName) {
         if (type == ConstantUtil.Goods_Type_pai) {
             mGoodIntro_view = mGoodsPai.findViewById(R.id.inc_goods_intro);
-            mGoodsIntro = (TextView)mGoodIntro_view.findViewById(R.id.goods_intro);
+            mGoodsIntro = (TextView) mGoodIntro_view.findViewById(R.id.goods_intro);
             mGoodsIntro.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_yj) {
             mGoodIntro_view = mGoodsYJ.findViewById(R.id.inc_goods_intro);
-            mGoodsIntro = (TextView)mGoodIntro_view.findViewById(R.id.goods_intro);
+            mGoodsIntro = (TextView) mGoodIntro_view.findViewById(R.id.goods_intro);
             mGoodsIntro.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_ykj) {
             mGoodIntro_view = mGoodsYKJ.findViewById(R.id.inc_goods_intro);
-            mGoodsIntro = (TextView)mGoodIntro_view.findViewById(R.id.goods_intro);
+            mGoodsIntro = (TextView) mGoodIntro_view.findViewById(R.id.goods_intro);
             mGoodsIntro.setText(goodsName);
         }
 
     }
+
     public void setGoodsStyle(int type) {
         if (type == ConstantUtil.Goods_All) {
             mGoodsHot.setVisibility(View.VISIBLE);
@@ -273,13 +278,13 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 
     public void setGoodsType(int type) {
         if (type == ConstantUtil.Goods_Type_pai) {
-            mGoodsName = (TextView)mGoodsPai.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsPai.findViewById(R.id.goods_name);
             mGoodsPai.setVisibility(View.VISIBLE);
         } else if (type == ConstantUtil.Goods_Type_yj) {
-            mGoodsName = (TextView)mGoodsYJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYJ.findViewById(R.id.goods_name);
             mGoodsYJ.setVisibility(View.VISIBLE);
         } else if (type == ConstantUtil.Goods_Type_ykj) {
-            mGoodsName = (TextView)mGoodsYKJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYKJ.findViewById(R.id.goods_name);
             mGoodsYKJ.setVisibility(View.VISIBLE);
         }
     }
@@ -422,6 +427,13 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void showPaiDialog() {
         View view = View.inflate(this, R.layout.custom_dialog_pai, null);
+        TextView basePrice = (TextView) view.findViewById(R.id.basePrice);
+        TextView nowPrice = (TextView) view.findViewById(R.id.nowPrice);
+        TextView addPrice = (TextView) view.findViewById(R.id.addPrice);
+
+        basePrice.setText(mBasePrice.getText().toString());
+        addPrice.setText(mMinPrice.getText().toString());
+        nowPrice.setText(mNowPrice.getText().toString());
         final CustomDialog.Builder builder = new CustomDialog.Builder(GoodsInfoActivity.this);
         builder.setTitle("竞拍").
                 setContentView(view).
@@ -458,6 +470,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 
     public void showYJDialog() {
         View view = View.inflate(this, R.layout.custom_dialog_yj, null);
+        TextView yj_chat = (TextView) view.findViewById(R.id.refPrice);
+        yj_chat.setText(mRefPrice.getText().toString());
         final CustomDialog.Builder builder = new CustomDialog.Builder(GoodsInfoActivity.this);
         builder.setTitle("可议价").
                 setContentView(view).

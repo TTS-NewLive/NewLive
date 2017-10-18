@@ -4,14 +4,14 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:orientation="vertical"
-    android:padding="20.0dip" >
+    android:padding="20.0dip">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/simple_green"
-        android:orientation="vertical" >
+        android:background="@drawable/dialog_border"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
@@ -19,20 +19,28 @@
             android:layout_width="fill_parent"
             android:layout_height="40.0dip"
             android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/themecolor"
             android:visibility="visible" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2.0px"
+            android:background="@color/themecolor" />
 
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center" >
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/message"
                 style="@style/text_16_666666"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left|center"
+                android:layout_height="120dp"
+                android:gravity="left|bottom"
+                android:layout_gravity="center"
                 android:lineSpacingMultiplier="1.5"
                 android:minHeight="120.0dip"
                 android:paddingBottom="15.0dip"
@@ -43,16 +51,15 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="1.0px"
-            android:background="#ffd0d0d0" />
+            android:layout_height="2.0px"
+            android:background="@color/themecolor" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="60.0dip"
             android:layout_gravity="bottom"
-            android:background="@drawable/dialog_bottom_bg"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/positiveButton"
@@ -60,9 +67,9 @@
                 android:layout_width="114.0dip"
                 android:layout_height="40.0dip"
                 android:background="@drawable/btn_ok_selector"
-                android:textColor="@color/black"
                 android:gravity="center"
-                android:text="确认" />
+                android:text="确认"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/negativeButton"
@@ -70,9 +77,10 @@
                 android:layout_width="114.0dip"
                 android:layout_height="40.0dip"
                 android:layout_marginLeft="20.0dip"
-                android:background="@drawable/btn_cancel_selector"
+                android:background="@drawable/btn_ok_selector"
                 android:gravity="center"
-                android:text="取消" />
+                android:text="取消"
+                android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
 
