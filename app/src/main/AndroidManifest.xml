@@ -29,6 +29,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
     <application
         android:name="com.mob.MobApplication"
         android:allowBackup="true"
@@ -99,7 +101,6 @@
         <uses-feature
             android:name="android.hardware.camera2"
             android:required="true" />
-
 
         <activity android:name=".activities.GoodsInfoActivity" />
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity" />

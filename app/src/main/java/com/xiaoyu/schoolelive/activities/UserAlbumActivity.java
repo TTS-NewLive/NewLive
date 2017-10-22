@@ -116,26 +116,26 @@ public class UserAlbumActivity extends BaseSlideBack implements EasyPermissions.
         File downloadDir = new File(Environment.getExternalStorageDirectory(), "BGAPhotoPickerDownload");
 
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        if (EasyPermissions.hasPermissions(UserAlbumActivity.this, perms)) {
-            if (mCurrentClickNpl.getItemCount() == 1) {
-                // 预览单张图片
-                if (mIntent.getIntExtra("motive", 0) == UserCenterActivity.CODE_APP_REQUEST) {
-                    startActivity(CustomBGAPhotoPreviewActivity.newIntent(UserAlbumActivity.this, mDownLoadableCb.isChecked() ? downloadDir : null, mCurrentClickNpl.getCurrentClickItem()));
-                } else {
-                    startActivity(BGAPhotoPreviewActivity.newIntent(UserAlbumActivity.this, mDownLoadableCb.isChecked() ? downloadDir : null, mCurrentClickNpl.getCurrentClickItem()));
-                }
-            } else if (mCurrentClickNpl.getItemCount() > 1) {
-                // 预览多张图片
-                if (mIntent.getIntExtra("motive", 0) == UserCenterActivity.CODE_APP_REQUEST) {
-                    startActivity(CustomBGAPhotoPreviewActivity.newIntent(UserAlbumActivity.this, mDownLoadableCb.isChecked() ? downloadDir : null, mCurrentClickNpl.getData(), mCurrentClickNpl.getCurrentClickItemPosition()));
-
-                } else {
-                    startActivity(BGAPhotoPreviewActivity.newIntent(UserAlbumActivity.this, mDownLoadableCb.isChecked() ? downloadDir : null, mCurrentClickNpl.getData(), mCurrentClickNpl.getCurrentClickItemPosition()));
-                }
-            }
-        } else {
-            EasyPermissions.requestPermissions(this, "图片预览需要以下权限:\n\n1.访问设备上的照片", REQUEST_CODE_PERMISSION_PHOTO_PREVIEW, perms);
-        }
+//       if (EasyPermissions.hasPermissions(UserAlbumActivity.this, perms)) {
+//            if (mCurrentClickNpl.getItemCount() == 1) {
+//                // 预览单张图片
+//                if (mIntent.getIntExtra("motive", 0) == UserInfo.CODE_APP_REQUEST) {
+//                    startActivity(CustomBGAPhotoPreviewActivity.newIntent(UserAlbumActivity.this, mDownLoadableCb.isChecked() ? downloadDir : null, mCurrentClickNpl.getCurrentClickItem()));
+//                } else {
+//                    startActivity(BGAPhotoPreviewActivity.newIntent(UserAlbumActivity.this, mDownLoadableCb.isChecked() ? downloadDir : null, mCurrentClickNpl.getCurrentClickItem()));
+//                }
+//            } else if (mCurrentClickNpl.getItemCount() > 1) {
+//                // 预览多张图片
+//                if (mIntent.getIntExtra("motive", 0) == UserInfo.CODE_APP_REQUEST) {
+//                    startActivity(CustomBGAPhotoPreviewActivity.newIntent(UserAlbumActivity.this, mDownLoadableCb.isChecked() ? downloadDir : null, mCurrentClickNpl.getData(), mCurrentClickNpl.getCurrentClickItemPosition()));
+//
+//                } else {
+//                    startActivity(BGAPhotoPreviewActivity.newIntent(UserAlbumActivity.this, mDownLoadableCb.isChecked() ? downloadDir : null, mCurrentClickNpl.getData(), mCurrentClickNpl.getCurrentClickItemPosition()));
+//                }
+//            }
+//        } else {
+//            EasyPermissions.requestPermissions(this, "图片预览需要以下权限:\n\n1.访问设备上的照片", REQUEST_CODE_PERMISSION_PHOTO_PREVIEW, perms);
+//        }
     }
 
     @Override

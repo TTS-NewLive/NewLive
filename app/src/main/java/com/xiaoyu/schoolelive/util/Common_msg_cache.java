@@ -4,7 +4,6 @@ import android.widget.Toast;
 
 import com.xiaoyu.schoolelive.data.Goods;
 import com.xiaoyu.schoolelive.data.PartJob;
-import com.xiaoyu.schoolelive.data.Publish;
 import java.util.ArrayList;
 /**
  * Created by Administrator on 2017/8/4.
@@ -19,16 +18,16 @@ import java.util.ArrayList;
                         ArrayList<Publish> date = common_msg_cache.getCache(getActivity());
 * */
 public  class Common_msg_cache {
-    //设置帖子的缓存
-    public static void set_msg_Cache(Context context, ArrayList<Publish> list){//序列化之后才能添加
-        ACache aCache = ACache.get(context);
-        aCache.put("msg_cache",list);
-    }
-    public static ArrayList<Publish> get_msg_Cache(Context context){
-        ACache aCache = ACache.get(context);
-        ArrayList<Publish> publish = (ArrayList<Publish>)aCache.getAsObject("msg_cache");
-        return publish;
-    }
+//    //设置帖子的缓存
+//    public static void set_msg_Cache(Context context, ArrayList<Publish> list){//序列化之后才能添加
+//        ACache aCache = ACache.get(context);
+//        aCache.put("msg_cache",list);
+//    }
+//    public static ArrayList<Publish> get_msg_Cache(Context context){
+//        ACache aCache = ACache.get(context);
+//        ArrayList<Publish> publish = (ArrayList<Publish>)aCache.getAsObject("msg_cache");
+//        return publish;
+//    }
     //设置旧货的缓存
     public static void set_goods_Cache(Context context, ArrayList<Goods> list){//序列化之后才能添加
         ACache aCache = ACache.get(context);

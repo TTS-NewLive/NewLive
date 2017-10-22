@@ -1,10 +1,6 @@
 package com.xiaoyu.schoolelive.adapter;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +9,6 @@ import android.widget.TextView;
 
 import com.thinkcool.circletextimageview.CircleTextImageView;
 import com.xiaoyu.schoolelive.R;
-import com.xiaoyu.schoolelive.activities.HistoryCollectActivity;
 import com.xiaoyu.schoolelive.data.SysInform;
 
 import java.util.List;
@@ -27,7 +22,7 @@ import butterknife.ButterKnife;
 public class SysInformAdapter extends RecyclerView.Adapter<SysInformAdapter.ViewHolder> {
     private Context mContext;
     private List<SysInform> mData;
-
+    private static final int NOTIFICATION_FLAG = 1;
     private SysInformAdapter.OnItemClickListener onItemClickListener;
 
     public SysInformAdapter(Context c, List<SysInform> data) {
@@ -82,6 +77,7 @@ public class SysInformAdapter extends RecyclerView.Adapter<SysInformAdapter.View
                 if (onItemClickListener != null) {
                     int pos = holder.getLayoutPosition();
                     onItemClickListener.onItemClick(holder.itemView, pos);
+
                 }
             }
         });

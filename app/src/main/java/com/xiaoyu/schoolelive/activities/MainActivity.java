@@ -1,9 +1,5 @@
 package com.xiaoyu.schoolelive.activities;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,8 +29,8 @@ public class MainActivity extends BaseMainSlide{
     private DrawerLayout drawer;
     private Toolbar toolbar;
 
-    private SecondHandFragment secondHandFragment = new SecondHandFragment();
-    private SysInformFragment sysInformFragment = new SysInformFragment();
+    private SecondHandFragment secondHandFragment ;
+    private SysInformFragment sysInformFragment;
     private BottomNavigationView navigation;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -70,7 +65,6 @@ public class MainActivity extends BaseMainSlide{
                         break;
                     case R.id.history:
                         intent = new Intent();
-                        intent.putExtra("str","history");
                         intent.setClass(MainActivity.this,HistoryCollectActivity.class);
                         startActivity(intent);
                         break;
@@ -202,6 +196,12 @@ public class MainActivity extends BaseMainSlide{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+        sysInformFragment = new SysInformFragment();
+        secondHandFragment = new SecondHandFragment();
+
+        get_Intent = getIntent();
+        uid = get_Intent.getLongExtra("uid",0);
 
         mainAddFragment();
         //引入侧滑栏布局

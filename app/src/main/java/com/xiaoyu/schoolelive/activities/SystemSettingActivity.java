@@ -45,8 +45,8 @@ public class SystemSettingActivity extends BaseSlideBack {
         final List<String> list = new ArrayList<String>();
         list.add("密码修改");
         list.add("切换账号");
-        list.add("主题设置");
-        list.add("推荐分享");
+//        list.add("主题设置");
+//        list.add("推荐分享");
         list.add("用户使用协议说明");
         list.add("关于我们");
         list.add("清除缓存");
@@ -86,39 +86,39 @@ public class SystemSettingActivity extends BaseSlideBack {
 //                            }
 //                        });
                         break;
-                    case 1://切换账号
-                        if (MainActivity.boo){
-                            new AlertDialog.Builder(SystemSettingActivity.this)
-                                    .setTitle("是否切换用户？")
-                                    .setIcon(R.drawable.side_nav_bar)
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            MainActivity.boo = false;
-                                            Intent intent = new Intent(SystemSettingActivity.this,LoginActivity.class);
-                                            startActivity(intent);
-                                        }
-                                    })
-                                    .setNegativeButton("取消", null)
-                                    .show();
-                        }else{
-                            Toast.makeText(SystemSettingActivity.this,"尚未登录！",Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                    case 2://主题设置
+//                    case 1://切换账号
+//                        if (MainActivity.boo){
+//                            new AlertDialog.Builder(SystemSettingActivity.this)
+//                                    .setTitle("是否切换用户？")
+//                                    .setIcon(R.drawable.side_nav_bar)
+//                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            MainActivity.boo = false;
+//                                            Intent intent = new Intent(SystemSettingActivity.this,LoginActivity.class);
+//                                            startActivity(intent);
+//                                        }
+//                                    })
+//                                    .setNegativeButton("取消", null)
+//                                    .show();
+//                        }else{
+//                            Toast.makeText(SystemSettingActivity.this,"尚未登录！",Toast.LENGTH_LONG).show();
+//                        }
+//                        break;
+//                    case 2://主题设置
+//
+//                        break;
+//                    case 3://推荐分享
+//                        intent = new Intent(SystemSettingActivity.this,SysSetShareActivity.class);
+//                        startActivity(intent);
+//                        break;
+                    case 1://用户使用协议说明
 
                         break;
-                    case 3://推荐分享
-                        intent = new Intent(SystemSettingActivity.this,SysSetShareActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 4://用户使用协议说明
+                    case 2://关于我们
 
                         break;
-                    case 5://关于我们
-
-                        break;
-                    case 6://消除缓存
+                    case 3://消除缓存
 
                         break;
                 }

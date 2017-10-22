@@ -22,7 +22,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.xiaoyu.schoolelive.R;
-import com.xiaoyu.schoolelive.activities.UserCenterActivity;
+import com.xiaoyu.schoolelive.activities.UserInfo;
 import com.xiaoyu.schoolelive.util.BitmapUtils;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
 
@@ -231,8 +231,8 @@ public class CustomBGAPhotoPreviewActivity extends BGAPPToolbarActivity implemen
                         //将裁剪后的图片转为byte数组
                         byte[] b = BitmapUtils.Bitmap2Bytes(photo);
                         //设置大图头像
-                        UserCenterActivity.bigImg = cpBitmap;
-                        Intent i = new Intent(CustomBGAPhotoPreviewActivity.this, UserCenterActivity.class);
+                        UserInfo.bigImg = cpBitmap;
+                        Intent i = new Intent(CustomBGAPhotoPreviewActivity.this, UserInfo.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("acFrom", ConstantUtil.USERALBUM_ACTIVITY);
                         //bundle.putInt("acFrom", );

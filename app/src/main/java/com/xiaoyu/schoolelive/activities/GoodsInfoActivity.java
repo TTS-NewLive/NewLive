@@ -330,8 +330,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        Intent intent = new Intent(GoodsInfoActivity.this, UserCenterActivity.class);
-                        startActivity(intent);
+//                        Intent intent = new Intent(GoodsInfoActivity.this, UserCenterActivity.class);
+//                        startActivity(intent);
                         break;
                     case 1:
                         if (goods.isFocus()) {
