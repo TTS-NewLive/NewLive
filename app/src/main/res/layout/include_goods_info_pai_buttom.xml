@@ -16,10 +16,10 @@
             android:src="@drawable/ic_goodsname24" />
 
         <TextView
-            android:layout_gravity="center"
             android:id="@+id/goods_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/ui_10_dip"
             android:textSize="18dp" />
     </LinearLayout>
@@ -35,8 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/textview_border"
-            android:textColor="@color/white"
-            android:text=" 竞拍 " />
+            android:text=" 竞拍 "
+            android:textColor="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -99,6 +99,15 @@
         android:id="@+id/inc_goods_intro"
         layout="@layout/include_goods_intro" />
 
+
+    <include layout="@layout/include_comment_bar" />
+
+    <com.xiaoyu.schoolelive.custom.MyListView
+        android:id="@+id/jp_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ui_10_dip" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -109,14 +118,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
+            android:layout_marginBottom="@dimen/ui_5_dip"
             android:layout_marginLeft="@dimen/ui_10_dip"
             android:layout_marginRight="@dimen/ui_10_dip"
-            android:layout_marginBottom="@dimen/ui_5_dip"
-            android:textColor="@color/white"
+            android:layout_weight="1"
             android:background="@drawable/btn_bg"
             android:gravity="center"
             android:text="竞价"
+            android:textColor="@color/white"
             android:textSize="@dimen/bar_text_size" />
     </LinearLayout>
 

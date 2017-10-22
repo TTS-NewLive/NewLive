@@ -337,6 +337,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
             goods.setPrice(Integer.valueOf(goods_price.getText().toString()));
         } else if (goods_type == ConstantUtil.Goods_Type_pai) {
             goods.setBasePrice(Integer.valueOf(goods_jp_baseprice.getText().toString()));
+            goods.setNowPrice(Integer.valueOf(goods_jp_baseprice.getText().toString()));
             goods.setMinPrice(Integer.valueOf(goods_jp_minadd.getText().toString()));
         } else if (goods_type == ConstantUtil.Goods_Type_yj) {
             goods.setRefPrice(Integer.valueOf(goods_kyj_price.getText().toString()));

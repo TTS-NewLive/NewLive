@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/ui_10_dip"
+    android:paddingBottom="@dimen/ui_10_dip">
+
+    <com.xiaoyu.schoolelive.custom.CircleImageView
+        android:id="@+id/jp_UserImage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginRight="@dimen/ui_5_dip" />
+
+    <TextView
+        android:id="@+id/jp_UserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/jp_UserImage" />
+
+    <TextView
+        android:id="@+id/jp_UserPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toEndOf="@+id/textView2"
+        android:textColor="@color/red"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/jp_UserImage"
+        android:layout_toEndOf="@+id/jp_UserImage"
+        android:text="出价：" />
+
+    <TextView
+        android:id="@+id/jp_Date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/jp_UserPrice"
+        android:layout_alignBottom="@+id/jp_UserPrice"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

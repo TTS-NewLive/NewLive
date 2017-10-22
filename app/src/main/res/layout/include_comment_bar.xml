@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginTop="10dp">
     <!--<View-->
         <!--android:layout_width="fill_parent"-->
         <!--android:layout_height="10dp"-->
@@ -25,7 +26,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="评论 "
+                android:text="出价 "
                 android:textSize="@dimen/bar_text_size" />
 
             <TextView
@@ -34,29 +35,13 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textSize="@dimen/bar_text_size" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" 人"
+                android:textSize="@dimen/bar_text_size"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="right|center"
-            android:orientation="horizontal"
-            android:paddingRight="15dp">
-
-            <TextView
-                android:id="@+id/all_like_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="@dimen/bar_text_size" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" 赞"
-                android:textSize="@dimen/bar_text_size" />
-        </LinearLayout>
     </LinearLayout>
 
     <View

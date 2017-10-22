@@ -11,13 +11,29 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/include_goods_thum_head" />
-
-        <ImageView
-            android:id="@+id/imageview"
+        <!--<include layout="@layout/include_goods_thum_head" />-->
+        <RelativeLayout
+            android:id="@+id/goods_style"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:scaleType="centerCrop" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageview"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/goods_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/icon_new32" />
+        </RelativeLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,16 +59,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:text="¥ "
+                    android:text="¥"
                     android:textColor="@color/red" />
 
                 <TextView
                     android:id="@+id/goods_thum_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100000"
                     android:textColor="@color/red"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:gravity="right"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1小时前"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
