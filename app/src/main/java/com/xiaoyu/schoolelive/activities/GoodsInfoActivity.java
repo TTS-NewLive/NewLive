@@ -14,18 +14,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.xiaoyu.schoolelive.R;
+import com.xiaoyu.schoolelive.adapter.GoodsJPAdapter;
 import com.xiaoyu.schoolelive.custom.CustomDialog;
+import com.xiaoyu.schoolelive.custom.MyListView;
 import com.xiaoyu.schoolelive.data.Goods;
+import com.xiaoyu.schoolelive.data.JPUser;
 import com.xiaoyu.schoolelive.util.ACache;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
 import com.xiaoyu.schoolelive.util.HttpUtil;
-import com.xiaoyu.schoolelive.util.ShowShareUtil;
 import com.xiaoyu.schoolelive.util.WidgetUtil;
 
 import org.json.JSONArray;
@@ -33,7 +36,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
@@ -53,12 +58,17 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     private TextView mBasePrice;
     private TextView mNowPrice;
     private TextView mMinPrice;
+    //竞拍列表控件
+    private MyListView mListView;
+    private GoodsJPAdapter mAdapter;
+    private List<JPUser> mData;
     //一口价
     private TextView mPrice;
     //可议价
     private TextView mRefPrice;
 
     private ImageView btn_more;
+    private ImageView btn_back;
     private Button btn_pai;
     private Button btn_ykj;
     private Button btn_yj_mai;
@@ -75,10 +85,10 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     private View mGoodsYJ;
     private View mGoodIntro_view;
     private BGABanner mGoodsImages;
-    final String[] mItems = new String[]{"卖家详情", "关注卖家", "收藏宝贝", "分享宝贝", "举报"};
+    final String[] mItems = new String[]{"卖家详情", "举报"};
     final String[] mAgainstItems = new String[]{"泄露隐私", "人身攻击", "淫秽色情", "垃圾广告", "敏感信息", "其他"};
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             ACache aCache = ACache.get(getApplicationContext());
@@ -87,23 +97,27 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
             String goods_id = bundle.getString("goods_id");
             List<String> Image_List = new ArrayList<>();
             List<String> wordsList = new ArrayList<>();
-            try{
+            try {
                 JSONArray jsonArray = new JSONArray(goods_path);
-                aCache.put(goods_id+"",jsonArray,3*ACache.TIME_DAY);//将数据放到缓存中
-                for (int i = 0; i < jsonArray.length();i++){
+                aCache.put(goods_id + "", jsonArray, 3 * ACache.TIME_DAY);//将数据放到缓存中
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Log.i("iiii",ConstantUtil.SERVICE_PATH+ WidgetUtil.str_trim(jsonObject.getString("goods_path")));
-                    Image_List.add(ConstantUtil.SERVICE_PATH+ WidgetUtil.str_trim(jsonObject.getString("goods_path")));
+                    Log.i("iiii", ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(jsonObject.getString("goods_path")));
+                    Image_List.add(ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(jsonObject.getString("goods_path")));
                     wordsList.add("小雨科技");
                 }
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             mGoodsImages.setData(Image_List, wordsList);
         }
     };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //取消状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_goods_info);
         goods = new Goods();
         initView();
@@ -120,14 +134,14 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         setGoodsType(intent.getIntExtra("tmp_goodsType", 0));
 
         //设置商品名称
-        setGoodsName(intent.getIntExtra("tmp_goodsType", 0),intent.getStringExtra("tmp_goodsname"));
+        setGoodsName(intent.getIntExtra("tmp_goodsType", 0), intent.getStringExtra("tmp_goodsname"));
 
         //设置商品介绍
-        setGoodsIntro(intent.getIntExtra("tmp_goodsType", 0) ,intent.getStringExtra("tmp_intro"));
+        setGoodsIntro(intent.getIntExtra("tmp_goodsType", 0), intent.getStringExtra("tmp_intro"));
         //设置浏览量
-        mGoodsPageViews.setText(intent.getStringExtra("tmp_pageViews"));
+        //mGoodsPageViews.setText(intent.getStringExtra("tmp_pageViews"));
         //设置商品标签
-        setGoodsStyle(intent.getIntExtra("tmp_goodsStyle", 0));
+        //setGoodsStyle(intent.getIntExtra("tmp_goodsStyle", 0));
         //设置商品价格
         setGoodsPrice(intent, intent.getIntExtra("tmp_goodsType", 0));
 
@@ -135,12 +149,18 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 
         setGoodsImages(goods_id);
 
-
+        // 初始化数据
+        mData = new ArrayList<>();
+        // 初始化适配器
+        mAdapter = new GoodsJPAdapter(this, mData);
+        // 为评论列表设置适配器
+        mListView.setAdapter(mAdapter);
         btn_more.setOnClickListener(this);
         btn_pai.setOnClickListener(this);
         btn_ykj.setOnClickListener(this);
         btn_yj_mai.setOnClickListener(this);
         btn_yj_chat.setOnClickListener(this);
+        btn_back.setOnClickListener(this);
     }
 
     public void findById() {
@@ -149,6 +169,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         btn_ykj = (Button) findViewById(R.id.btn_ykj);
         btn_yj_mai = (Button) findViewById(R.id.btn_yj_mai);
         btn_yj_chat = (Button) findViewById(R.id.btn_yj_chat);
+        btn_back = (ImageView) findViewById(R.id.goods_back);
+
         mGoodsImages = (BGABanner) findViewById(R.id.goods_images_banner);
         mGoodsPageViews = (TextView) findViewById(R.id.goods_attention_count);
         mGoodsHot = (TextView) findViewById(R.id.goods_hot);
@@ -162,6 +184,10 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         mBasePrice = (TextView) findViewById(R.id.pai_base_price);
         mNowPrice = (TextView) findViewById(R.id.pai_now_price);
         mMinPrice = (TextView) findViewById(R.id.pai_min_price);
+
+        //竞拍列表控件
+        mListView = (MyListView) findViewById(R.id.jp_list);
+
         //一口价价格
         mPrice = (TextView) findViewById(R.id.yikoujia_price);
         //可议价价格
@@ -183,33 +209,34 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
             }
         });
         ACache aCache = ACache.get(getApplicationContext());
-        if(aCache.getAsJSONArray(""+goods_id) != null){//如果缓存中存在,直接在缓存中读取
+        if (aCache.getAsJSONArray("" + goods_id) != null) {//如果缓存中存在,直接在缓存中读取
             List<String> Image_List = new ArrayList<>();
             List<String> wordsList = new ArrayList<>();
-            try{
-                JSONArray jsonArray = aCache.getAsJSONArray(""+goods_id);
-                for (int i = 0; i < jsonArray.length();i++){
+            try {
+                JSONArray jsonArray = aCache.getAsJSONArray("" + goods_id);
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Image_List.add(ConstantUtil.SERVICE_PATH+ WidgetUtil.str_trim(jsonObject.getString("goods_path")));
+                    Image_List.add(ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(jsonObject.getString("goods_path")));
                     wordsList.add("小雨科技");
                 }
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             mGoodsImages.setData(Image_List, wordsList);
-        }else {//缓存中不存在，向服务器发送请求
+        } else {//缓存中不存在，向服务器发送请求
             final RequestBody requestBody = new FormBody.Builder()
-                    .add("goods_id",goods_id)
+                    .add("goods_id", goods_id)
                     .build();
             HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "query_goods_image.php", requestBody, new Callback() {
                 public void onFailure(Call call, IOException e) {
 
                 }
+
                 public void onResponse(Call call, Response response) throws IOException {
                     Message msg = new Message();
                     Bundle bundle = new Bundle();
-                    bundle.putString("goods_id",goods_id);
-                    bundle.putString("goods_path",response.body().string());
+                    bundle.putString("goods_id", goods_id);
+                    bundle.putString("goods_path", response.body().string());
                     msg.setData(bundle);
                     handler.sendMessage(msg);
                 }
@@ -218,36 +245,39 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         }
 
 
-
     }
-    public void setGoodsName(int type,String goodsName){
+
+    public void setGoodsName(int type, String goodsName) {
         if (type == ConstantUtil.Goods_Type_pai) {
-            mGoodsName = (TextView)mGoodsPai.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsPai.findViewById(R.id.goods_name);
             mGoodsName.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_yj) {
-            mGoodsName = (TextView)mGoodsYJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYJ.findViewById(R.id.goods_name);
             mGoodsName.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_ykj) {
-            mGoodsName = (TextView)mGoodsYKJ.findViewById(R.id.goods_name);
-            mGoodsName.setText(goodsName);}
+            mGoodsName = (TextView) mGoodsYKJ.findViewById(R.id.goods_name);
+            mGoodsName.setText(goodsName);
+        }
 
     }
-    public void setGoodsIntro(int type,String goodsName){
+
+    public void setGoodsIntro(int type, String goodsName) {
         if (type == ConstantUtil.Goods_Type_pai) {
             mGoodIntro_view = mGoodsPai.findViewById(R.id.inc_goods_intro);
-            mGoodsIntro = (TextView)mGoodIntro_view.findViewById(R.id.goods_intro);
+            mGoodsIntro = (TextView) mGoodIntro_view.findViewById(R.id.goods_intro);
             mGoodsIntro.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_yj) {
             mGoodIntro_view = mGoodsYJ.findViewById(R.id.inc_goods_intro);
-            mGoodsIntro = (TextView)mGoodIntro_view.findViewById(R.id.goods_intro);
+            mGoodsIntro = (TextView) mGoodIntro_view.findViewById(R.id.goods_intro);
             mGoodsIntro.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_ykj) {
             mGoodIntro_view = mGoodsYKJ.findViewById(R.id.inc_goods_intro);
-            mGoodsIntro = (TextView)mGoodIntro_view.findViewById(R.id.goods_intro);
+            mGoodsIntro = (TextView) mGoodIntro_view.findViewById(R.id.goods_intro);
             mGoodsIntro.setText(goodsName);
         }
 
     }
+
     public void setGoodsStyle(int type) {
         if (type == ConstantUtil.Goods_All) {
             mGoodsHot.setVisibility(View.VISIBLE);
@@ -273,13 +303,13 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 
     public void setGoodsType(int type) {
         if (type == ConstantUtil.Goods_Type_pai) {
-            mGoodsName = (TextView)mGoodsPai.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsPai.findViewById(R.id.goods_name);
             mGoodsPai.setVisibility(View.VISIBLE);
         } else if (type == ConstantUtil.Goods_Type_yj) {
-            mGoodsName = (TextView)mGoodsYJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYJ.findViewById(R.id.goods_name);
             mGoodsYJ.setVisibility(View.VISIBLE);
         } else if (type == ConstantUtil.Goods_Type_ykj) {
-            mGoodsName = (TextView)mGoodsYKJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYKJ.findViewById(R.id.goods_name);
             mGoodsYKJ.setVisibility(View.VISIBLE);
         }
     }
@@ -315,6 +345,9 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.btn_yj_mai:
                 break;
+            case R.id.goods_back:
+                finish();
+                break;
         }
     }
     //
@@ -333,21 +366,21 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 //                        Intent intent = new Intent(GoodsInfoActivity.this, UserCenterActivity.class);
 //                        startActivity(intent);
                         break;
+//                    case 1:
+//                        if (goods.isFocus()) {
+//                            Toast.makeText(GoodsInfoActivity.this, "您已关注该用户", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Toast.makeText(GoodsInfoActivity.this, "关注成功", Toast.LENGTH_SHORT).show();
+//                            goods.setFocus(true);
+//                        }
+//                        break;
+//                    case 2:
+//                        Toast.makeText(GoodsInfoActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case 3:
+//                        ShowShareUtil.showShare(GoodsInfoActivity.this);
+//                        break;
                     case 1:
-                        if (goods.isFocus()) {
-                            Toast.makeText(GoodsInfoActivity.this, "您已关注该用户", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(GoodsInfoActivity.this, "关注成功", Toast.LENGTH_SHORT).show();
-                            goods.setFocus(true);
-                        }
-                        break;
-                    case 2:
-                        Toast.makeText(GoodsInfoActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 3:
-                        ShowShareUtil.showShare(GoodsInfoActivity.this);
-                        break;
-                    case 4:
                         AlertDialog.Builder builder = new AlertDialog.Builder(GoodsInfoActivity.this);
                         builder.setItems(mAgainstItems, new DialogInterface.OnClickListener() {
                             @Override
@@ -379,7 +412,6 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                         WindowManager.LayoutParams params =
                                 against.getWindow().getAttributes();
                         params.width = 600;
-                        params.height = 900;
                         params.y = -200;
                         params.alpha = 0.9f;
                         against.getWindow().setAttributes(params);
@@ -422,6 +454,14 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void showPaiDialog() {
         View view = View.inflate(this, R.layout.custom_dialog_pai, null);
+        TextView basePrice = (TextView) view.findViewById(R.id.basePrice);
+        TextView nowPrice = (TextView) view.findViewById(R.id.nowPrice);
+        TextView addPrice = (TextView) view.findViewById(R.id.addPrice);
+        final EditText yourPrice = (EditText) view.findViewById(R.id.pai_yoursPrice);
+
+        basePrice.setText(mBasePrice.getText().toString());
+        addPrice.setText(mMinPrice.getText().toString());
+        nowPrice.setText(mNowPrice.getText().toString());
         final CustomDialog.Builder builder = new CustomDialog.Builder(GoodsInfoActivity.this);
         builder.setTitle("竞拍").
                 setContentView(view).
@@ -433,7 +473,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                sendPrice(yourPrice);
+                dialog.dismiss();
             }
         }).create().show();
     }
@@ -458,6 +499,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 
     public void showYJDialog() {
         View view = View.inflate(this, R.layout.custom_dialog_yj, null);
+        TextView yj_chat = (TextView) view.findViewById(R.id.refPrice);
+        yj_chat.setText(mRefPrice.getText().toString());
         final CustomDialog.Builder builder = new CustomDialog.Builder(GoodsInfoActivity.this);
         builder.setTitle("可议价").
                 setContentView(view).
@@ -471,7 +514,39 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
             public void onClick(DialogInterface dialog, int which) {
 
             }
+
         }).create().show();
     }
 
+    /**
+     * 竞拍发送报价
+     */
+    public void sendPrice(EditText myPrcie) {
+        View view = View.inflate(this, R.layout.custom_dialog_pai, null);
+        if (myPrcie.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), "报价不能为空！", Toast.LENGTH_SHORT).show();
+        } else {
+            // 生成报价数据
+            JPUser jpUser = new JPUser();
+            jpUser.setImage(R.drawable.icon_default_head);
+            jpUser.setName("出价者" + (mData.size() + 1));
+            jpUser.setPrice(myPrcie.getText().toString());
+
+            //获取当前时间
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
+            Date date = new Date(System.currentTimeMillis());
+            String str = format.format(date);
+            jpUser.setDate(str);
+
+            mAdapter.addMyPrice(jpUser);
+            // 发送完，清空输入框
+            myPrcie.setText("");
+
+            Toast.makeText(getApplicationContext(), "报价成功！", Toast.LENGTH_SHORT).show();
+
+            // 隐藏输入法，然后暂存当前输入框的内容，方便下次使用
+//            InputMethodManager im = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//            im.hideSoftInputFromWindow(myPrcie.getWindowToken(), 0);
+        }
+    }
 }

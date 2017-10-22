@@ -123,31 +123,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
 
         goods_kyj_price = (EditText) findViewById(R.id.goods_kyj_price);
         publish_goods = (Button) findViewById(R.id.price_button);
-        publish_goods.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (goods_name.getText().toString().isEmpty() || goods_description.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "商品名称或者介绍不能为空", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (goods_price.getText().toString().isEmpty() ||
-                        (goods_jp_minadd.getText().toString().isEmpty() && goods_jp_minadd.getText().toString().isEmpty()) ||
-                        goods_kyj_price.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "商品价格不能为空", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (photos == null) {
-                    Toast.makeText(getApplicationContext(), "请选择商品的图片", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                progressDialog = new ProgressDialog(UserAddGoodsActivity.this);
-                progressDialog.setMessage("上传中...");
-                progressDialog.setCancelable(true);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.show();
-                upLoad_goods_info();
-            }
-        });
+
         iv_crop = (ImageView) findViewById(R.id.iv_crop);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         photoAdapter = new PhotoAdapter(this, selectedPhotos);
@@ -218,12 +194,50 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
         auction_ll = (LinearLayout) findViewById(R.id.auction_ll);
 
         radioGroup.setOnCheckedChangeListener(this);
+
+        publish_goods.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (goods_name.getText().toString().isEmpty() || goods_description.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "商品名称或者介绍不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String select = WidgetUtil.get_radio_select(radioGroup);//得到商品出售方式
+                if (select.equals("一口价")) {
+                    if (goods_price.getText().toString().isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "商品价格不能为空", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else if (select.equals("可议价")) {
+                    if (goods_kyj_price.getText().toString().isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "商品价格不能为空", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else if (select.equals("竞拍")) {
+                    if (goods_jp_minadd.getText().toString().isEmpty() || goods_jp_minadd.getText().toString().isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "商品价格不能为空", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                if (photos == null) {
+                    Toast.makeText(getApplicationContext(), "请选择商品的图片", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                progressDialog = new ProgressDialog(UserAddGoodsActivity.this);
+                progressDialog.setMessage("上传中...");
+                progressDialog.setCancelable(true);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.show();
+                upLoad_goods_info();
+            }
+        });
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         Message message = new Message();
-        if (checkedId == fixed_price.getId() || checkedId == negotiable.getId()) {
+        if (checkedId == fixed_price.getId()) {
             message.what = 1;
             handler.sendMessage(message);
         } else if (checkedId == auction.getId()) {
@@ -302,7 +316,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
                 goods.setTopImage(bean);//设置封面图片
                 goods.setGoodsName(goods_name.getText().toString());//设置名称
                 goods.setGoodsIntro(goods_description.getText().toString());//设置介绍
-                goods.setPageViews(Integer.valueOf(goods_price.getText().toString()));  //设置商品浏览量
+                //goods.setPageViews(Integer.valueOf(goods_price.getText().toString()));  //设置商品浏览量
                 goods.setGoodsStyle(ConstantUtil.Goods_New); //设置顶热新商品属性
                 goods.setGoodsType(goods_type);
                 setGoodsPrice(goods, goods_type);
@@ -323,6 +337,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
             goods.setPrice(Integer.valueOf(goods_price.getText().toString()));
         } else if (goods_type == ConstantUtil.Goods_Type_pai) {
             goods.setBasePrice(Integer.valueOf(goods_jp_baseprice.getText().toString()));
+            goods.setNowPrice(Integer.valueOf(goods_jp_baseprice.getText().toString()));
             goods.setMinPrice(Integer.valueOf(goods_jp_minadd.getText().toString()));
         } else if (goods_type == ConstantUtil.Goods_Type_yj) {
             goods.setRefPrice(Integer.valueOf(goods_kyj_price.getText().toString()));

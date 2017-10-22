@@ -139,14 +139,14 @@ public class WaterFallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Bind(R.id.imageview)
         ImageView mImageView;
-        @Bind(R.id.goods_top)
-        TextView mGoodsTop;
-        @Bind(R.id.goods_hot)
-        TextView mGoodsHot;
-        @Bind(R.id.goods_new)
-        TextView mGoodsNew;
-        @Bind(R.id.goods_attention_count_thum)
-        TextView mGoodsPageViews;
+        //        @Bind(R.id.goods_top)
+//        TextView mGoodsTop;
+//        @Bind(R.id.goods_hot)
+//        TextView mGoodsHot;
+//        @Bind(R.id.goods_new)
+//        TextView mGoodsNew;
+//        @Bind(R.id.goods_attention_count_thum)
+//        TextView mGoodsPageViews;
         @Bind(R.id.goods_name)
         TextView mGoodsName;
         @Bind(R.id.goods_thum_price)
@@ -182,7 +182,7 @@ public class WaterFallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if (holder instanceof ViewHolder) {
             ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
             //int height = 500 + (int)(Math.random()*650);//350 到 650之间的随机数
-            layoutParams.height = 830;
+            layoutParams.height = 730;
             holder.itemView.setLayoutParams(layoutParams);
 
             initImageLoader(mContext);
@@ -190,14 +190,16 @@ public class WaterFallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             //获取封面图片
             ImageBean bean = goods.getTopImages();
             //获取商品类型
-            int GoodsStyle = goods.getGoodsStyle();
-            setGoodsStyle((ViewHolder) holder, GoodsStyle);
+            //int GoodsStyle = goods.getGoodsStyle();
+            //setGoodsStyle((ViewHolder) holder, GoodsStyle);
             //获取商品名称
             ((ViewHolder) holder).mGoodsName.setText(goods.getGoodsName());
+            //设置价格
+            setGoodsPrice((ViewHolder) holder, goods, goods.getGoodsType());
             //获取商品价格
             //((ViewHolder) holder).mGoodsPrice.setText(goods.getPrice());
             //获取商品浏览量
-            ((ViewHolder) holder).mGoodsPageViews.setText(goods.getPageViews() + "");
+            //((ViewHolder) holder).mGoodsPageViews.setText(goods.getPageViews() + "");
             //显示图片
 
             ImageLoader.getInstance().displayImage(bean.getImgsrc(),
@@ -226,28 +228,36 @@ public class WaterFallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    private void setGoodsStyle(ViewHolder holder, int type) {
-        if (type == ConstantUtil.Goods_All) {
-            holder.mGoodsHot.setVisibility(View.VISIBLE);
-            holder.mGoodsNew.setVisibility(View.VISIBLE);
-            holder.mGoodsTop.setVisibility(View.VISIBLE);
-        } else if (type == ConstantUtil.Goods_Hot) {
-            holder.mGoodsHot.setVisibility(View.VISIBLE);
-        } else if (type == ConstantUtil.Goods_New) {
-            holder.mGoodsNew.setVisibility(View.VISIBLE);
-        } else if (type == ConstantUtil.Goods_Top) {
-            holder.mGoodsTop.setVisibility(View.VISIBLE);
-        } else if (type == ConstantUtil.Goods_Top_Hot) {
-            holder.mGoodsTop.setVisibility(View.VISIBLE);
-            holder.mGoodsHot.setVisibility(View.VISIBLE);
-        } else if (type == ConstantUtil.Goods_Hot_New) {
-            holder.mGoodsHot.setVisibility(View.VISIBLE);
-            holder.mGoodsNew.setVisibility(View.VISIBLE);
-        } else if (type == ConstantUtil.Goods_Top_New) {
-            holder.mGoodsTop.setVisibility(View.VISIBLE);
-            holder.mGoodsNew.setVisibility(View.VISIBLE);
+    private void setGoodsPrice(ViewHolder holder, Goods goods, int type) {
+        if (type == ConstantUtil.Goods_Type_ykj) {
+            holder.mGoodsPrice.setText(String.valueOf(goods.getPrice()));
+        } else if (type == ConstantUtil.Goods_Type_pai) {
+            holder.mGoodsPrice.setText(String.valueOf(goods.getNowPrice()));
         }
     }
+
+//    private void setGoodsStyle(ViewHolder holder, int type) {
+//        if (type == ConstantUtil.Goods_All) {
+//            holder.mGoodsHot.setVisibility(View.VISIBLE);
+//            holder.mGoodsNew.setVisibility(View.VISIBLE);
+//            holder.mGoodsTop.setVisibility(View.VISIBLE);
+//        } else if (type == ConstantUtil.Goods_Hot) {
+//            holder.mGoodsHot.setVisibility(View.VISIBLE);
+//        } else if (type == ConstantUtil.Goods_New) {
+//            holder.mGoodsNew.setVisibility(View.VISIBLE);
+//        } else if (type == ConstantUtil.Goods_Top) {
+//            holder.mGoodsTop.setVisibility(View.VISIBLE);
+//        } else if (type == ConstantUtil.Goods_Top_Hot) {
+//            holder.mGoodsTop.setVisibility(View.VISIBLE);
+//            holder.mGoodsHot.setVisibility(View.VISIBLE);
+//        } else if (type == ConstantUtil.Goods_Hot_New) {
+//            holder.mGoodsHot.setVisibility(View.VISIBLE);
+//            holder.mGoodsNew.setVisibility(View.VISIBLE);
+//        } else if (type == ConstantUtil.Goods_Top_New) {
+//            holder.mGoodsTop.setVisibility(View.VISIBLE);
+//            holder.mGoodsNew.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     private void initImageLoader(Context context) {//初始化ImageLoader
         int memoryCacheSize = (int) (Runtime.getRuntime().maxMemory() / 5);
