@@ -69,7 +69,6 @@ public  class Common_msg_cache {
         return cache_goods;
     }
 
-
     /*
     * 更新缓存
     * */
@@ -81,5 +80,7 @@ public  class Common_msg_cache {
         set_goods_Cache(context,goods);
 
     }
+
+
 
 }

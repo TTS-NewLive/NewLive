@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/userReportTB"
-        layout="@layout/include_toolbar"/>
+        layout="@layout/include_toolbar2"/>
     <EditText
         android:id="@+id/userReportET"
         android:layout_width="match_parent"

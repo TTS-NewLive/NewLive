@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiaoyu.schoolelive.base.BaseSlideBack;
@@ -20,6 +22,8 @@ public class UserReportActivity extends BaseSlideBack {
 
     private EditText editText;
     private Button button;
+    private ImageView ig;
+    private TextView tv;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_report);
@@ -32,21 +36,15 @@ public class UserReportActivity extends BaseSlideBack {
             }
         });
 
-        //标题栏
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("意见反馈");
-
-    }
-    //标题栏菜单点击逻辑
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
+        ig = (ImageView)findViewById(R.id.toolbarBack);
+        ig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+            }
+        });
+
+        tv = (TextView)findViewById(R.id.toolbarTitle);
+        tv.setText("意见反馈");
     }
 }

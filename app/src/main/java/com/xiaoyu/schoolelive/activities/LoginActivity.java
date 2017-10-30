@@ -30,8 +30,10 @@ import android.widget.Toast;
 
 import com.xiaoyu.schoolelive.R;
 import com.xiaoyu.schoolelive.base.BaseSlideBack;
+import com.xiaoyu.schoolelive.util.Common_msg_cache;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
 import com.xiaoyu.schoolelive.util.HttpUtil;
+import com.xiaoyu.schoolelive.util.Login_cache;
 
 import java.io.IOException;
 
@@ -53,15 +55,14 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
             }else{
                if(password.equals(data)){
                    Toast.makeText(LoginActivity.this,"登陆成功", Toast.LENGTH_SHORT).show();
-                   MainActivity.boo = true;
+                   Login_cache.set_login_true(getApplicationContext());
                    if(remember_pass.isChecked()){//如果用户点击了记住密码
-                       editor.putLong("uid",uid);//将用户的实际帐号密码存到shareperference中，
-                       editor.putString("Password",data);//用来设置记录的帐号和密码
-                       editor.putBoolean("isChecked",true);//将isChecked常量放到sharedperference中
-                   }else{//没有点击记住密码，直接进入主界面
-                       editor.putBoolean("isChecked",false);
+                       Login_cache.set_login_username(getApplicationContext(),mUserwordView.getText().toString());
+                       Login_cache.set_login_password(getApplicationContext(),mPasswordView.getText().toString());
+                       //修改记住状态
+                       Login_cache.set_login_chose_true(getApplicationContext());
+
                    }
-                   editor.apply();//提交
                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                    intent.putExtra("uid",uid);
                    startActivity(intent);//跳转到主界面并传递id
@@ -77,11 +78,6 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
     private Button register;
     private CheckBox remember_pass;//记住密码按钮
     private RequestBody requestBody;//发送请求对象
-    private SharedPreferences login_sp;
-    private SharedPreferences.Editor editor;
-    private static long UsernameValue;//将要存到sharedpreference中的帐号
-    private static String PasswordValue;//将要存到sharedpreference中的密码
-    private boolean choseRemember;//是否选择记住密码、login_status登录状态
     private Handler handler;
     private String password;
 
@@ -202,19 +198,32 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
         //actionBar.setTitle("登录");
 
         register = (Button) findViewById(R.id.btn_regist);
-        login_sp = getSharedPreferences("User_info", MODE_APPEND);
-        choseRemember = login_sp.getBoolean("isChecked", false);
-        editor = login_sp.edit();//实例化Editor对象
+//        login_sp = getSharedPreferences("User_info", MODE_APPEND);
+//        choseRemember = login_sp.getBoolean("isChecked", false);
+//        editor = login_sp.edit();//实例化Editor对象
         handler = new MyHandler();
         remember_pass = (CheckBox) findViewById(R.id.mRememberCheck);
-        if (choseRemember) {
-            UsernameValue = login_sp.getLong("uid", 0);
-            PasswordValue = login_sp.getString("Password", null);
-            mUserwordView.setText(String.valueOf(UsernameValue));
-            mPasswordView.setText(PasswordValue);
-            mUserwordView.setSelection(String.valueOf(UsernameValue).length());//将帐号输入框的光标移到最后
-            remember_pass.setChecked(true);
+        //将记住按钮的状态存入缓存
+        if (remember_pass.isChecked()){
+            Login_cache.set_login_chose_true(getApplicationContext());
+        }else{
+            Login_cache.set_login_chose_false(getApplicationContext());
         }
+        //初始化记住状态
+        // 如果是没选择记住，则为空
+        // 如果选择的记住，则从缓存进行读取赋值
+        if (Login_cache.get_login_chose_status(getApplicationContext())==null){
+            Login_cache.set_login_chose_false(getApplicationContext());
+        }else if(Login_cache.get_login_chose_status(getApplicationContext()).equals("false")){
+            remember_pass.setChecked(false);
+            mUserwordView.setText("");
+            mPasswordView.setText("");
+        }else{
+            remember_pass.setChecked(true);
+            mUserwordView.setText(Login_cache.get_login_username(getApplicationContext()));
+            mPasswordView.setText(Login_cache.get_login_password(getApplicationContext()));
+        }
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,15 +288,6 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
                 }
             });
         }
-    }
-    //标题栏菜单点击逻辑
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
 

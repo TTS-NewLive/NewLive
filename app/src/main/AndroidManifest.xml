@@ -28,8 +28,7 @@
     <!-- 蓝牙分享所需的权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name="com.mob.MobApplication"
@@ -80,22 +79,16 @@
             android:value="638d7e531e2f2ccde608086fb15437a8" />
         <!-- MOD添加必要的权限 -->
 
-        <activity android:name=".activities.AlbumImageDetailActivity" />
-        
+
         <activity android:name=".activities.FindActivity" />
         <activity android:name=".activities.HistoryCollectActivity" />
         <activity android:name=".activities.LoginActivity" />
-
         <activity android:name=".activities.RegistActivity" />
 
-
-        <activity android:name=".activities.SysSetShareActivity" />
         <activity android:name=".activities.SystemSettingActivity" />
-        <activity android:name=".activities.UserAlbumActivity" />
-        <activity android:name=".activities.UserCenterActivity" />
+
 
         <activity android:name=".activities.UserInfo" />
-
         <activity android:name=".activities.UserReportActivity" />
 
         <uses-feature
@@ -119,11 +112,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".activities.PreViewImgActivity" />
-        <activity android:name=".activities.SysSetBindActivity" />
         <activity android:name=".activities.UserAddGoodsActivity" />
         <activity android:name=".custom.CustomBGAPhotoPreviewActivity" />
-        <activity android:name=".activities.SignCalenderActivity">
-        </activity>
+        <activity android:name=".activities.SignCalenderActivity"></activity>
+        <activity android:name=".activities.UPActivity"></activity>
     </application>
 
 </manifest>

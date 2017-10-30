@@ -15,9 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.xiaoyu.schoolelive.R;
 import com.xiaoyu.schoolelive.base.BaseMainSlide;
 import com.xiaoyu.schoolelive.custom.CustomFloatingDraftButton;
+import com.xiaoyu.schoolelive.util.ACache;
+import com.xiaoyu.schoolelive.util.Common_msg_cache;
+import com.xiaoyu.schoolelive.util.Login_cache;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -25,16 +31,16 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseMainSlide{
     private Intent intent,get_Intent;
     private long uid;//用户的id
-    public static boolean boo = false;
     private DrawerLayout drawer;
-    private Toolbar toolbar;
+    private TextView maintitle;
+    private ImageView find;
+    private ImageView intoLogin;
 
     private SecondHandFragment secondHandFragment ;
     private SysInformFragment sysInformFragment;
     private BottomNavigationView navigation;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
-
 
     @Bind(R.id.floatingActionButton)
     CustomFloatingDraftButton floatingDraftButton;
@@ -74,6 +80,7 @@ public class MainActivity extends BaseMainSlide{
                         break;
                     case R.id.SystemSetting:
                         intent = new Intent(MainActivity.this,SystemSettingActivity.class);
+                        intent.putExtra("uid",uid);
                         startActivity(intent);
                         break;
                 }
@@ -98,15 +105,36 @@ public class MainActivity extends BaseMainSlide{
     //引入标题栏
     private void mainInitToolBar(){
         //标题栏
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        intoLogin = (ImageView)findViewById(R.id.intoLogin);
+        maintitle = (TextView)findViewById(R.id.mainTitle);
+        find = (ImageView)findViewById(R.id.find);
+
+        intoLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Login_cache.get_login_status(getApplicationContext()).equals("false")){
+                    intent = new Intent(MainActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    drawer.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+
+        find.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(MainActivity.this,FindActivity.class);
+                startActivity(intent);
+            }
+        });
         //判断用户是否登录，
-        if (!boo){
-            //显示未登录图像
-            actionBar.setHomeAsUpIndicator(R.drawable.icon_main_home);
+        if (Login_cache.get_login_status(getApplicationContext()).equals("false")){
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            intoLogin.setImageResource(R.drawable.ic_menu_share);
         }else{
+            intoLogin.setImageResource(R.drawable.menu_info_dw);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             //显示已登录用户的头像
         }
     }
@@ -157,26 +185,6 @@ public class MainActivity extends BaseMainSlide{
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-    //标题栏菜单点击逻辑
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                if (!boo){
-                    intent = new Intent(MainActivity.this,LoginActivity.class);
-                    startActivity(intent);
-                }else{
-                    drawer.openDrawer(GravityCompat.START);
-                }
-                return true;
-
-            case R.id.findButton:
-                intent = new Intent(MainActivity.this,FindActivity.class);
-                startActivity(intent);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     public void mainSetSecondFrament(){
         getSupportActionBar().setTitle("旧货");
@@ -196,12 +204,15 @@ public class MainActivity extends BaseMainSlide{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
-
         sysInformFragment = new SysInformFragment();
         secondHandFragment = new SecondHandFragment();
 
         get_Intent = getIntent();
         uid = get_Intent.getLongExtra("uid",0);
+
+        if (Login_cache.get_login_status(getApplicationContext()) == null){
+            Login_cache.set_login_false(getApplicationContext());
+        }
 
         mainAddFragment();
         //引入侧滑栏布局

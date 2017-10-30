@@ -185,6 +185,7 @@ public class SecondHandFragment extends Fragment {
 
         mAdapter.setOnItemClickListener(new WaterFallAdapter.OnItemClickListener() {
             public void onItemClick(View view, int position) {
+
                 Goods goods = new Goods();
                 ArrayList<Goods> cache_goods = Common_msg_cache.get_goods_Cache(getContext());
                // goods = goodsList.get(position);
@@ -315,7 +316,7 @@ public class SecondHandFragment extends Fragment {
             Toast.makeText(context, "缓存中读取", Toast.LENGTH_SHORT).show();
         }
     }
-    public   void refresh_goods_cache(){
+    public void refresh_goods_cache(){
         final ArrayList<Goods> cache_goods_refresh = new ArrayList<>();
         HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "query_goods.php", new Callback() {
             public void onFailure(Call call, IOException e) {

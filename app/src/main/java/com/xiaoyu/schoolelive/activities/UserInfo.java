@@ -19,7 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -70,12 +72,13 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     String signature = b.getString("signature");
 
                     Glide.with(UserInfo.this)//将选中的图片放到imageview中
-                            .load(R.drawable.qq_login)
+                            .load(photo)
                             .into(mPhoto);
 
                     custom_fname.setInfo_menu_info(name);
                     custom_about.setInfo_menu_info(signature);
                     custom_tname.setInfo_menu_info(real_name);
+
                     if (String.valueOf("0").equals(sex)) {
                         custom_sex.setInfo_menu_info("男");
                     } else if (String.valueOf("1").equals(sex)) {
@@ -148,15 +151,23 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
     private static final int CODE_CAMERA_REQUEST = 0xa1;//拍照
 //    public static final int CODE_APP_REQUEST = 0xa2;//APP
     private static final int CODE_RESULT_REQUEST = 0xa2;//最终裁剪后的结果
+
+    private TextView tv;
+    private ImageView ig;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-        //标题栏
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("编辑资料");
+
+        tv = (TextView)findViewById(R.id.toolbarTitle);
+        tv.setText("编辑资料");
+        ig = (ImageView)findViewById(R.id.toolbarBack);
+        ig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         handler = new MyHandler();
 
         mPhoto = (CircleImageView) findViewById(R.id.mPhoto);//图像对象
@@ -481,15 +492,6 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
             return false;
         }
     }
-    //标题栏菜单点击逻辑
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent intent) {
@@ -506,21 +508,38 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                         .into(mPhoto);
 
                 bigImg = BitmapUtils.decodeUri(UserInfo.this, intent.getData(), mWidth, mHeigh);
+
+                //新建文件夹 先选好路径 再调用mkdir函数 现在是根目录下面的Ask文件夹
+//                try {
+//                    File image = saveFile(BitmapFactory.decodeFile(intent.getData().toString()), "photo");
+//                    uploadMultiFile(uid, image);//上传文件到服务器
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 //cropRawPhoto(intent.getData());//直接裁剪图片
                 break;
-            case CODE_CAMERA_REQUEST:
+            case CODE_CAMERA_REQUEST://如果是来自摄像头
                 if (hasSdcard()) {
                     File tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
                     Toast.makeText(UserInfo.this, tempFile.toString(), Toast.LENGTH_LONG).show();
                     //Bitmap bm= BitmapFactory.decodeFile(tempFile.toString());
                     //mPhoto.setImageBitmap(bm);
 
-                    Glide.with(UserInfo.this)//将选中的图片放到imageview 中
+                    //将选中的图片放到头像中
+                    Glide.with(UserInfo.this)
                             .load(Uri.fromFile(tempFile))
                             .error(R.drawable.qq_login)
                             .into(mPhoto);
+                    //将选中的图像保存
                     bigImg = BitmapUtils.decodeUri(UserInfo.this, Uri.fromFile(tempFile), mWidth, mHeigh);
                     //cropRawPhoto();
+                    //新建文件夹 先选好路径 再调用mkdir函数 现在是根目录下面的Ask文件夹
+//                    try {
+//                        File image = saveFile(BitmapFactory.decodeFile(tempFile.toString()), "photo");
+//                        uploadMultiFile(uid, image);//上传文件到服务器
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                 } else {
                     Toast.makeText(getApplication(), "没有SDCard!", Toast.LENGTH_LONG)
                             .show();
@@ -644,6 +663,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                 handler.sendMessage(msg);
             }
         });
+
     }
 
     public String str_trim(String str) {//去除字符串中的所有空格(用来去掉服务器返回路径中的空格)
