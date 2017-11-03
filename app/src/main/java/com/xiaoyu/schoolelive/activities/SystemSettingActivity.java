@@ -92,6 +92,7 @@ public class SystemSettingActivity extends BaseSlideBack {
         });
         tv = (TextView)findViewById(R.id.toolbarTitle);
         tv.setText("系统设置");
+
         intent = getIntent();
         uid = intent.getLongExtra("uid",0);
 
@@ -136,7 +137,7 @@ public class SystemSettingActivity extends BaseSlideBack {
                                 public void onClick(View v) {
                                     dialog.hide();
                                     RequestBody requestBody = new FormBody.Builder()
-                                            .add("uid","13995979800")
+                                            .add("uid", String.valueOf(uid))
                                             .add("old_password", old_password.getText().toString())
                                             .add("new_password", new_password.getText().toString())
                                             .build();
@@ -215,7 +216,6 @@ public class SystemSettingActivity extends BaseSlideBack {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Toast.makeText(SystemSettingActivity.this,"已退出！",Toast.LENGTH_LONG).show();
                                     Login_cache.set_login_false(getApplicationContext());
-                                    Login_cache.set_login_password(getApplicationContext(),"");
                                     Intent intent = new Intent(SystemSettingActivity.this,MainActivity.class);
                                     startActivity(intent);
                                     finish();

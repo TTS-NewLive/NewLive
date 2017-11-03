@@ -116,6 +116,7 @@
         <activity android:name=".custom.CustomBGAPhotoPreviewActivity" />
         <activity android:name=".activities.SignCalenderActivity"></activity>
         <activity android:name=".activities.UPActivity"></activity>
+        <activity android:name=".activities.DealListActivity"/>
     </application>
 
 </manifest>

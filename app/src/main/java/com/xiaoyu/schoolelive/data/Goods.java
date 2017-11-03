@@ -7,7 +7,7 @@ import java.util.List;
  * Created by lenovo on 2017/8/12.
  */
 
-public class Goods implements Serializable{
+public class Goods implements Serializable {
     //竞拍
     public int basePrice;
     public int nowPrice;
@@ -25,13 +25,22 @@ public class Goods implements Serializable{
     public String goodsStartDate;
     public String goodsEndDate;
     public String goods_id;
+    public String uid;
     public int goodsType;
     public int goodsStyle;
     public int pageViews;//浏览量
     public boolean isFocus = false;
     public boolean isAgainst = false;
     public boolean isCollection = false;
-    public int  status = 0;//加载状态
+    public int status = 0;//加载状态
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public int getMinPrice() {
         return minPrice;

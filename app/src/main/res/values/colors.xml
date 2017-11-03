@@ -90,4 +90,7 @@
 
     <!--商店兑换主题颜色-->
     <color name="shop_exchange">#BE974C</color>
+
+    <!--交易记录item-->
+    <color name="deal_item">#F5F1EE</color>
 </resources>

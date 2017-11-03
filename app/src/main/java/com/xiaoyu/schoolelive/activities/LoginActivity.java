@@ -61,7 +61,9 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
                        Login_cache.set_login_password(getApplicationContext(),mPasswordView.getText().toString());
                        //修改记住状态
                        Login_cache.set_login_chose_true(getApplicationContext());
-
+                   }else{
+                       //修改记住状态
+                       Login_cache.set_login_chose_false(getApplicationContext());
                    }
                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                    intent.putExtra("uid",uid);
@@ -80,8 +82,6 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
     private RequestBody requestBody;//发送请求对象
     private Handler handler;
     private String password;
-
-
     private EditText mUserwordView,mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -204,21 +204,19 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
         handler = new MyHandler();
         remember_pass = (CheckBox) findViewById(R.id.mRememberCheck);
         //将记住按钮的状态存入缓存
-        if (remember_pass.isChecked()){
-            Login_cache.set_login_chose_true(getApplicationContext());
-        }else{
-            Login_cache.set_login_chose_false(getApplicationContext());
-        }
+//        if (remember_pass.isChecked()){
+//            Login_cache.set_login_chose_true(getApplicationContext());
+//        }else{
+//            Login_cache.set_login_chose_false(getApplicationContext());
+//        }
         //初始化记住状态
         // 如果是没选择记住，则为空
         // 如果选择的记住，则从缓存进行读取赋值
-        if (Login_cache.get_login_chose_status(getApplicationContext())==null){
-            Login_cache.set_login_chose_false(getApplicationContext());
-        }else if(Login_cache.get_login_chose_status(getApplicationContext()).equals("false")){
+        if (Login_cache.get_login_chose_status(getApplicationContext())==null|Login_cache.get_login_chose_status(getApplicationContext()).equals("false")){
             remember_pass.setChecked(false);
             mUserwordView.setText("");
             mPasswordView.setText("");
-        }else{
+        }else {
             remember_pass.setChecked(true);
             mUserwordView.setText(Login_cache.get_login_username(getApplicationContext()));
             mPasswordView.setText(Login_cache.get_login_password(getApplicationContext()));

@@ -1,9 +1,11 @@
 package com.xiaoyu.schoolelive.util;
-import android.content.Context;
-import android.widget.Toast;
 
+import android.content.Context;
+
+import com.xiaoyu.schoolelive.data.Deal;
 import com.xiaoyu.schoolelive.data.Goods;
 import com.xiaoyu.schoolelive.data.PartJob;
+
 import java.util.ArrayList;
 /**
  * Created by Administrator on 2017/8/4.
@@ -18,16 +20,6 @@ import java.util.ArrayList;
                         ArrayList<Publish> date = common_msg_cache.getCache(getActivity());
 * */
 public  class Common_msg_cache {
-//    //设置帖子的缓存
-//    public static void set_msg_Cache(Context context, ArrayList<Publish> list){//序列化之后才能添加
-//        ACache aCache = ACache.get(context);
-//        aCache.put("msg_cache",list);
-//    }
-//    public static ArrayList<Publish> get_msg_Cache(Context context){
-//        ACache aCache = ACache.get(context);
-//        ArrayList<Publish> publish = (ArrayList<Publish>)aCache.getAsObject("msg_cache");
-//        return publish;
-//    }
     //设置旧货的缓存
     public static void set_goods_Cache(Context context, ArrayList<Goods> list){//序列化之后才能添加
         ACache aCache = ACache.get(context);
@@ -54,6 +46,15 @@ public  class Common_msg_cache {
         int toIndex = Integer.valueOf(aCache.getAsString("toIndex"));
         return toIndex;
     }
+    public static void set_deal_Cache(Context context, ArrayList<Deal> list){//序列化之后才能添加
+        ACache aCache = ACache.get(context);
+        aCache.put("deal_cache",list);
+    }
+    public static ArrayList<Deal> get_deal_Cache(Context context){
+        ACache aCache = ACache.get(context);
+        ArrayList<Deal> cache_deal = (ArrayList<Deal>)aCache.getAsObject("deal_cache");
+        return cache_deal;
+    }
     public static void add_goods_cache_status(Context context,int toIndex){//更新当前加载状态
         set_goods_cache_status(context,toIndex);
     }
@@ -68,6 +69,7 @@ public  class Common_msg_cache {
         ArrayList<PartJob> cache_goods = (ArrayList<PartJob>)aCache.getAsObject("jobs_cache");
         return cache_goods;
     }
+
 
     /*
     * 更新缓存

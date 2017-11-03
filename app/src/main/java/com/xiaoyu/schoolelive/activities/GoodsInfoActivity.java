@@ -27,8 +27,10 @@ import com.xiaoyu.schoolelive.custom.MyListView;
 import com.xiaoyu.schoolelive.data.Goods;
 import com.xiaoyu.schoolelive.data.JPUser;
 import com.xiaoyu.schoolelive.util.ACache;
+import com.xiaoyu.schoolelive.util.Common_msg_cache;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
 import com.xiaoyu.schoolelive.util.HttpUtil;
+import com.xiaoyu.schoolelive.util.Login_cache;
 import com.xiaoyu.schoolelive.util.WidgetUtil;
 
 import org.json.JSONArray;
@@ -67,6 +69,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     //可议价
     private TextView mRefPrice;
 
+    private String goods_id;
+    private String seller_id;
     private ImageView btn_more;
     private ImageView btn_back;
     private Button btn_pai;
@@ -87,6 +91,18 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     private BGABanner mGoodsImages;
     final String[] mItems = new String[]{"卖家详情", "举报"};
     final String[] mAgainstItems = new String[]{"泄露隐私", "人身攻击", "淫秽色情", "垃圾广告", "敏感信息", "其他"};
+    private Handler handler2 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //判断交易是否成功
+            String result = (String) msg.obj;
+            if (String.valueOf(1).equals(result)) {
+                Toast.makeText(GoodsInfoActivity.this, "交易成功", Toast.LENGTH_SHORT).show();
+            } else if (String.valueOf(2).equals(result)) {
+                Toast.makeText(GoodsInfoActivity.this, "交易失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     private Handler handler = new Handler() {
         @Override
@@ -145,8 +161,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         //设置商品价格
         setGoodsPrice(intent, intent.getIntExtra("tmp_goodsType", 0));
 
-        String goods_id = intent.getStringExtra("tmp_goodsid");
-
+        goods_id = intent.getStringExtra("tmp_goodsid");
+        seller_id = intent.getStringExtra("tmp_uid");
         setGoodsImages(goods_id);
 
         // 初始化数据
@@ -492,7 +508,29 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String buyerId = Login_cache.get_login_username(getApplicationContext());
+                String sellerId = seller_id;
+                String goodsId = goods_id;
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("buyer_id", buyerId)
+                        //.add("seller_id", sellerId)
+                        .add("goods_id", goodsId)
+                        .build();
+                HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "goods_deal.php", requestBody, new okhttp3.Callback() {
+                    public void onFailure(Call call, IOException e) {
+                        Toast.makeText(GoodsInfoActivity.this, "网络好像出问题了...", Toast.LENGTH_SHORT).show();
+                    }
 
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseData = response.body().string();
+                        String result = responseData;
+                        Log.d("GoodsInfo", result);
+                        Message msg = Message.obtain();
+                        msg.obj = result;
+                        handler2.sendMessage(msg);
+                    }
+                });
+                dialog.dismiss();
             }
         }).create().show();
     }

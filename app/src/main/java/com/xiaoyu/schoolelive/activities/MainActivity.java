@@ -65,9 +65,8 @@ public class MainActivity extends BaseMainSlide{
             public boolean onNavigationItemSelected(MenuItem i) {
                 switch (i.getItemId()){
                     case R.id.order:
-                        /*
-                        * 订单历史
-                        * */
+                        intent = new Intent(MainActivity.this,DealListActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.history:
                         intent = new Intent();
@@ -135,7 +134,6 @@ public class MainActivity extends BaseMainSlide{
         }else{
             intoLogin.setImageResource(R.drawable.menu_info_dw);
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            //显示已登录用户的头像
         }
     }
     //在程序中加入默认Fragment
@@ -187,14 +185,14 @@ public class MainActivity extends BaseMainSlide{
     }
 
     public void mainSetSecondFrament(){
-        getSupportActionBar().setTitle("旧货");
+        maintitle.setText("旧货");
         SysInformFragment.SysInformIsDisplay = false;
         secondHandFragment = new SecondHandFragment();
         fragmentTransaction.replace(R.id.main_menu_content, secondHandFragment, "secondhand").commit();
 
     }
     public void mainSetSysinformFrament(){
-        getSupportActionBar().setTitle("通知");
+        maintitle.setText("通知");
         SysInformFragment.SysInformIsDisplay = true;
         sysInformFragment = new SysInformFragment();
         fragmentTransaction.replace(R.id.main_menu_content, sysInformFragment,"inform").commit();

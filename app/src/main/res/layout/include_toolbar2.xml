@@ -4,12 +4,13 @@
     android:id="@+id/toolbar"
     android:background="@color/themecolor"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="48dp">
     <ImageView
         android:id="@+id/toolbarBack"
         android:src="@drawable/back"
-        android:layout_width="48dp"
-        android:layout_height="48dp" />
+        android:layout_centerVertical="true"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
     <TextView
         android:id="@+id/toolbarTitle"
         android:textSize="20dp"
