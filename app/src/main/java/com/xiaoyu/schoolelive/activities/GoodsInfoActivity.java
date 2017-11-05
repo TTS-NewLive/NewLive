@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,6 +28,7 @@ import com.xiaoyu.schoolelive.data.JPUser;
 import com.xiaoyu.schoolelive.util.ACache;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
 import com.xiaoyu.schoolelive.util.HttpUtil;
+import com.xiaoyu.schoolelive.util.Login_cache;
 import com.xiaoyu.schoolelive.util.WidgetUtil;
 
 import org.json.JSONArray;
@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
+import io.rong.imkit.RongIM;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -85,9 +86,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     private View mGoodsYJ;
     private View mGoodIntro_view;
     private BGABanner mGoodsImages;
-    final String[] mItems = new String[]{"卖家详情", "举报"};
+    final String[] mItems = new String[]{"卖家详情", "举报","聊天"};
     final String[] mAgainstItems = new String[]{"泄露隐私", "人身攻击", "淫秽色情", "垃圾广告", "敏感信息", "其他"};
-
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -102,7 +102,6 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 aCache.put(goods_id + "", jsonArray, 3 * ACache.TIME_DAY);//将数据放到缓存中
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Log.i("iiii", ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(jsonObject.getString("goods_path")));
                     Image_List.add(ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(jsonObject.getString("goods_path")));
                     wordsList.add("小雨科技");
                 }
@@ -120,6 +119,11 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_goods_info);
         goods = new Goods();
+        if (get_sell_id() != null){
+            Toast.makeText(this, get_sell_id(), Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "kkkkk", Toast.LENGTH_SHORT).show();
+        }
         initView();
 
     }
@@ -416,6 +420,23 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                         params.alpha = 0.9f;
                         against.getWindow().setAttributes(params);
                         break;
+                    case 2:
+                        if(!Login_cache.get_login_status(getApplicationContext()).equals("true")){
+                            Toast.makeText(GoodsInfoActivity.this,"请先登录", Toast.LENGTH_SHORT).show();
+                            return;
+                        }else {
+                            if(RongIM.getInstance() != null){
+                                //不让卖家的电话号码全部显示,中间4位用*表示
+                               // String encryption_sell_id = get_sell_id().substring(0,3)+"****"+get_sell_id().substring(7,11);//加密
+                                String now_id = Login_cache.get_login_username(getApplicationContext());
+
+                                //String sell_id = get_sell_id();
+                               // RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this,now_id.equals(sell_id)?now_id:sell_id,now_id.equals(sell_id)?now_id:sell_id);
+                                String encryption_sell_id =  get_sell_id().substring(0,3)+"****"+get_sell_id().substring(7,11);
+                                RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this,get_sell_id(),encryption_sell_id);
+                            }
+                        }
+
                 }
             }
         });
@@ -548,5 +569,9 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 //            InputMethodManager im = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 //            im.hideSoftInputFromWindow(myPrcie.getWindowToken(), 0);
         }
+    }
+    //得到卖家的id
+    private String get_sell_id(){
+        return getIntent().getStringExtra("tmp_uid");
     }
 }

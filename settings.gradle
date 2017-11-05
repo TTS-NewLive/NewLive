@@ -1,2 +1,2 @@
-include ':app', ':PhotoPicker-PhotoPicker'
+include ':app', ':PhotoPicker-PhotoPicker', ':IMLib', ':IMKit'
 

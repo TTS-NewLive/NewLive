@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/ui_10_dip"
+    android:background="@color/deal_item">
+
+    <ImageView
+        android:id="@+id/deal_goods_topimage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="@dimen/ui_5_dip"
+        android:background="@color/view_color" />
+
+    <TextView
+        android:id="@+id/deal_goods_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:typeface="serif"
+        android:text="这是商品名称"
+        android:textColor="#515151"
+        android:layout_above="@+id/textView3"
+        android:layout_toEndOf="@+id/deal_goods_topimage"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/deal_goods_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¥1000"
+        android:textColor="#515151"
+        android:typeface="serif"
+        android:layout_alignBaseline="@+id/deal_goods_name"
+        android:layout_alignBottom="@+id/deal_goods_name"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="卖家："
+        android:layout_alignBaseline="@+id/deal_sell_time"
+        android:layout_alignBottom="@+id/deal_sell_time"
+        android:layout_toEndOf="@+id/deal_goods_topimage" />
+
+    <TextView
+        android:id="@+id/deal_seller_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="卖家昵称"
+        android:layout_alignBaseline="@+id/textView3"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/deal_sell_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2017-10-23"
+        android:layout_marginTop="44dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

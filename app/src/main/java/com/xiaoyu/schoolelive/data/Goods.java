@@ -19,6 +19,7 @@ public class Goods implements Serializable{
 
 
     public List<ImageBean> images;
+    public String uid;//卖家id
     public ImageBean topImage;
     public String goodsName;
     public String goodsIntro;
@@ -183,5 +184,13 @@ public class Goods implements Serializable{
 
     public int getStatus() {
         return status;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
     }
 }

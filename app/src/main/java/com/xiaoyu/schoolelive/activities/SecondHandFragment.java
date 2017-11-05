@@ -53,7 +53,6 @@ public class SecondHandFragment extends Fragment {
     private RefreshLayout refreshLayout;
     public static Context mcontext;
 
-
     public Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             String goods_data = (String) msg.obj;
@@ -63,6 +62,7 @@ public class SecondHandFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String goods_id = jsonObject.getString("goods_id");
+                    String uid = jsonObject.getString("uid");
                     String top_image = jsonObject.getString("top_image");
                     String goods_name = jsonObject.getString("goods_name");
                     int goods_price = jsonObject.getInt("goods_price");
@@ -73,6 +73,7 @@ public class SecondHandFragment extends Fragment {
                     ImageBean bean = new ImageBean();
                     bean.setImgsrc(str);
                     goods.setGoods_id(goods_id);
+                    goods.setUid(uid);
                     goods.setTopImage(bean);//设置封面图片
                     goods.setPageViews(goods_price);  //设置商品浏览量
                     goods.setGoodsName(goods_name);//设置商品名称
@@ -114,6 +115,7 @@ public class SecondHandFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {//设置上拉刷新监听器
 
             public void onRefresh(RefreshLayout refreshlayout) {
+                refresh_goods_cache();
                 mAdapter.notifyDataSetChanged();
                 refreshlayout.finishRefresh();
             }
@@ -122,6 +124,7 @@ public class SecondHandFragment extends Fragment {
 
             public void onLoadmore(RefreshLayout refreshlayout) {
                 add_goods(refreshlayout);
+                //refresh_goods_cache();
                 refreshlayout.finishLoadmore();
             }
         });
@@ -191,6 +194,7 @@ public class SecondHandFragment extends Fragment {
                 goods = cache_goods.get(position);
                 Intent intent = new Intent(getActivity(), GoodsInfoActivity.class);
                 intent.putExtra("tmp_goodsid", goods.getGoods_id());//传递商品id
+                intent.putExtra("tmp_uid",goods.getUid());
                 intent.putExtra("tmp_goodsname", goods.getGoodsName());//传递商品名称
                 intent.putExtra("tmp_intro", goods.getGoodsIntro());//传递商品介绍
                 intent.putExtra("tmp_pageViews", String.valueOf(goods.getPageViews()));
@@ -288,7 +292,7 @@ public class SecondHandFragment extends Fragment {
             }
             mAdapter.getRandomHeight(cache_goods);
             mAdapter.notifyDataSetChanged();
-            Toast.makeText(getContext(), "缓存中读取", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getContext(), "缓存中读取", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -327,6 +331,7 @@ public class SecondHandFragment extends Fragment {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String goods_id = jsonObject.getString("goods_id");
+                        String uid = jsonObject.getString("uid");
                         String top_image = jsonObject.getString("top_image");
                         String goods_name = jsonObject.getString("goods_name");
                         int goods_price = jsonObject.getInt("goods_price");
@@ -346,11 +351,14 @@ public class SecondHandFragment extends Fragment {
                         setPrice(goods, goods.getGoodsType(), goods_price);//设置商品价格
                         // goodsList.add(goods);
                         cache_goods_refresh.add(goods);
+
                     }
+
                     Common_msg_cache.refresh_goods_Caches(getContext(),cache_goods_refresh);
                    // Toast.makeText(getContext(),"更新缓存成功",Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.e("eeee",e.getMessage());
                 }
             }
         });

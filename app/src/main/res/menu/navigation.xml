@@ -11,5 +11,9 @@
         android:id="@+id/navigation_sysinform"
         android:icon="@drawable/ic_menu_inform32"
         android:title="@string/title_sysinform" />
-
+    <item
+        android:id="@+id/navigation_message"
+        android:icon="@drawable/message"
+        android:title="@string/title_message"
+        />
 </menu>

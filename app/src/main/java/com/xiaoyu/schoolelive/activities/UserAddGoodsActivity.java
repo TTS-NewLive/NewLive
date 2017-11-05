@@ -30,6 +30,7 @@ import com.xiaoyu.schoolelive.data.ImageBean;
 import com.xiaoyu.schoolelive.util.BitmapUtils;
 import com.xiaoyu.schoolelive.util.Common_msg_cache;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
+import com.xiaoyu.schoolelive.util.Login_cache;
 import com.xiaoyu.schoolelive.util.RecyclerItemClickListener;
 import com.xiaoyu.schoolelive.util.WidgetUtil;
 
@@ -198,6 +199,10 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
         publish_goods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!Login_cache.get_login_status(getApplicationContext()).equals("true")){
+                    Toast.makeText(getApplicationContext(), "请先登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (goods_name.getText().toString().isEmpty() || goods_description.getText().toString().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "商品名称或者介绍不能为空", Toast.LENGTH_SHORT).show();
                     return;
@@ -277,6 +282,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
         final String date = sDateFormat.format(new java.util.Date());//得到系统当前时间作为商品的id
         mbody.addFormDataPart("goods_id", date);
         mbody.addFormDataPart("goods_name", goods_name.getText().toString());//发送商品名称
+        mbody.addFormDataPart("uid",Login_cache.get_login_username(getApplicationContext()));//发送当前登录用户的id
 
         if (goods_type == ConstantUtil.Goods_Type_ykj) {
             mbody.addFormDataPart("goods_price", goods_price.getText().toString());//发送商品价格

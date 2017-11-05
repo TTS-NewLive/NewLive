@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.design.widget.AppBarLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/side_nav_bar"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
+    android:layout_height="48dp">
+    <ImageView
+        android:id="@+id/intoLogin"
+        android:src="@drawable/menu_info_dw"
+        android:layout_centerVertical="true"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
+    <TextView
+        android:id="@+id/mainTitle"
+        android:layout_weight="1"
+        android:textSize="24dp"
+        android:text="旧货"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    <ImageView
+        android:id="@+id/find"
+        android:src="@drawable/find"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
+</RelativeLayout>

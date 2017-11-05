@@ -6,16 +6,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include
-        layout="@layout/include_toolbar"/>
-    <com.xiaoyu.schoolelive.custom.CustomBar
-        android:id="@+id/custom_photo"
+        layout="@layout/include_toolbar2"/>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/user_recyclerview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--/>-->
+    <LinearLayout
+        android:id="@+id/mPhotoLinearLayout"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        app:name_text="头像"
-        app:info_drawable="@drawable/menu_info_dw"
-        app:right_drawable="@drawable/menu_right_dw"
-        />
+        android:layout_marginTop="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:paddingTop="10sp"
+            android:minHeight="45dp"
+            android:minWidth="45dp"
+            android:textSize="16dp"
+            android:text="头像"
+            android:layout_weight="1"
+            />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/mPhoto"
+            android:src="@drawable/dw_1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp" />
+        <ImageView
+            android:src="@drawable/menu_right_dw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:minHeight="45dp"
+            android:minWidth="45dp" />
+    </LinearLayout>
+
     <com.xiaoyu.schoolelive.custom.CustomBar
         android:id="@+id/custom_fname"
         android:layout_width="match_parent"
@@ -25,7 +60,6 @@
         app:info_text="点击设置昵称"
         app:right_drawable="@drawable/menu_right_dw"
         />
-
     <com.xiaoyu.schoolelive.custom.CustomBar
         android:id="@+id/custom_about"
         android:layout_width="match_parent"
@@ -52,24 +86,6 @@
         android:layout_marginTop="5dp"
         app:name_text="性别"
         app:info_text="点击设置性别"
-        app:right_drawable="@drawable/menu_right_dw"
-        />
-    <com.xiaoyu.schoolelive.custom.CustomBar
-        android:id="@+id/custom_bri"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        app:name_text="生日"
-        app:info_text="96.06.15"
-        app:right_drawable="@drawable/menu_right_dw"
-        />
-    <com.xiaoyu.schoolelive.custom.CustomBar
-        android:id="@+id/custom_address"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        app:name_text="所在地"
-        app:info_text="点击设置所在地"
         app:right_drawable="@drawable/menu_right_dw"
         />
 

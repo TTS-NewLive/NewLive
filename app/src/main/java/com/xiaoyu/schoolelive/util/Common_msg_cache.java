@@ -2,6 +2,7 @@ package com.xiaoyu.schoolelive.util;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.xiaoyu.schoolelive.data.Deal;
 import com.xiaoyu.schoolelive.data.Goods;
 import com.xiaoyu.schoolelive.data.PartJob;
 import com.xiaoyu.schoolelive.data.Publish;
@@ -55,32 +56,43 @@ public  class Common_msg_cache {
         int toIndex = Integer.valueOf(aCache.getAsString("toIndex"));
         return toIndex;
     }
+    public static void set_deal_Cache(Context context, ArrayList<Deal> list){//序列化之后才能添加
+        ACache aCache = ACache.get(context);
+        aCache.put("deal_cache",list);
+    }
+    public static ArrayList<Deal> get_deal_Cache(Context context){
+        ACache aCache = ACache.get(context);
+        ArrayList<Deal> cache_deal = (ArrayList<Deal>)aCache.getAsObject("deal_cache");
+        return cache_deal;
+    }
     public static void add_goods_cache_status(Context context,int toIndex){//更新当前加载状态
         set_goods_cache_status(context,toIndex);
     }
-    //设置兼职的缓存
-    public static void add_jobs_Cache(Context context, ArrayList<PartJob> list){//序列化之后才能添加
-        ACache aCache = ACache.get(context);
-        aCache.put("jobs_cache",list);
-    }
-    //得到兼职的缓存
-    public static ArrayList<PartJob> get_jobs_Cache(Context context){//得到缓存的商品信息
-        ACache aCache = ACache.get(context);
-        ArrayList<PartJob> cache_goods = (ArrayList<PartJob>)aCache.getAsObject("jobs_cache");
-        return cache_goods;
-    }
-
-
-    /*
-    * 更新缓存
-    * */
-    public static void refresh_jobs_Caches(Context context,ArrayList<PartJob> partJobs){
-        add_jobs_Cache(context,partJobs);
-    }
-
     public static void refresh_goods_Caches(Context context,ArrayList<Goods> goods){
         set_goods_Cache(context,goods);
 
     }
+//    public static void set_login_true(Context context,String uid){//设置当前用户登录状态并将帐号保存在缓存中
+//        ACache aCache = ACache.get(context);
+//        aCache.put("login_status","true");
+//        aCache.put("now_login",uid);
+//    }
+//    public static void set_login_false(Context context){
+//        ACache aCache = ACache.get(context);
+//        aCache.put("login_status","false");
+//        aCache.put("now_login","");
+//    }
+//    public  static String get_login_status(Context context){
+//        ACache aCache = ACache.get(context);
+//        String login_staus = aCache.getAsString("login_status");
+//        return login_staus;
+//    }
+//    public static String get_now_uid(Context context){//得到当前登录id
+//        ACache aCache = ACache.get(context);
+//        String now_uid = aCache.getAsString("now_login");
+//        return now_uid;
+//    }
+
+
 
 }

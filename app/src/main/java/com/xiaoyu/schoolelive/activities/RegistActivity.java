@@ -13,12 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiaoyu.schoolelive.R;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
 import com.xiaoyu.schoolelive.util.HttpUtil;
+import com.xiaoyu.schoolelive.util.SendMessage;
+import com.xiaoyu.schoolelive.util.TimeCountUtil;
 
 import java.io.IOException;
 
@@ -55,12 +56,16 @@ public class RegistActivity extends AppCompatActivity {
 
     private EditText rg_uid;//帐号
     private EditText rg_pwd;//密码
-    private TextView getVerify;//获取验证码
+    private EditText verify;
+    private Button getVerify;//获取验证码
     private Button btn_regist;//注册按钮
     private long rg_uid_content;//rg_uid中的内容
     private String rg_pwd_content;//rg_pwd中的内容
     private Handler handler;
 
+
+
+    private int num;//验证码
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regist);
@@ -71,11 +76,12 @@ public class RegistActivity extends AppCompatActivity {
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 //        actionBar.setTitle("注册");
-        getVerify = (TextView) findViewById(R.id.getVerify);
+        getVerify = (Button) findViewById(R.id.getVerify);
         rg_uid = (EditText) findViewById(R.id.rg_uid);
         rg_pwd = (EditText) findViewById(R.id.rg_pwd);
 
         handler = new MyHandler();
+        verify = (EditText)findViewById(R.id.verify);
         getVerify.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         btn_regist = (Button) findViewById(R.id.btn_regist);
         btn_regist.setOnClickListener(new View.OnClickListener() {
@@ -83,10 +89,30 @@ public class RegistActivity extends AppCompatActivity {
                 register();
             }
         });
+        getVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //倒计时60000ms=60s;
+                //时间间隔1000ms=1s;
+                TimeCountUtil timeCountUtil = new TimeCountUtil(RegistActivity.this, 60000, 1000, getVerify);
+                timeCountUtil.start();
+                num = (int)(Math.random()*9000)+1000;//随机生成1000-9999的验证码
+                // Toast.makeText(RegistActivity.this, rg_uid.getText().toString(), Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SendMessage.send(rg_uid.getText().toString(),num);
+                    }
+                }).start();
+            }
+        });
+
     }
-
     private void register() {
-
+        if(num != Integer.valueOf(verify.getText().toString())){
+            Toast.makeText(this, "验证码不正确", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (rg_uid.getText().toString().isEmpty() || rg_pwd.getText().toString().isEmpty()) {
             Toast.makeText(RegistActivity.this, "你还没有输入帐号或密码", Toast.LENGTH_SHORT).show();
             return;
@@ -104,7 +130,6 @@ public class RegistActivity extends AppCompatActivity {
         HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "register.php", requestBody, new okhttp3.Callback() {
             public void onFailure(Call call, IOException e) {
             }
-
             public void onResponse(Call call, Response response) throws IOException {
                 String responseData = response.body().string();
                 String result = responseData;

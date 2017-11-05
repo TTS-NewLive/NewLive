@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/side_nav_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <com.xiaoyu.schoolelive.custom.CustomBar
         android:id="@+id/custom_photo"
         android:layout_width="match_parent"
@@ -13,8 +14,11 @@
         app:name_text="头像"
         app:info_drawable="@drawable/menu_info_dw"
         app:right_drawable="@drawable/menu_right_dw"
+        android:layout_alignParentStart="true"
         />
     <com.xiaoyu.schoolelive.custom.CustomBar
+        android:layout_below="@id/custom_photo"
+        android:layout_alignParentStart="true"
         android:id="@+id/custom_fname"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -24,6 +28,8 @@
         app:right_drawable="@drawable/menu_right_dw"
         />
     <com.xiaoyu.schoolelive.custom.CustomBar
+        android:layout_below="@id/custom_fname"
+        android:layout_alignParentStart="true"
         android:id="@+id/custom_about"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -33,6 +39,8 @@
         app:right_drawable="@drawable/menu_right_dw"
         />
     <com.xiaoyu.schoolelive.custom.CustomBar
+        android:layout_below="@id/custom_about"
+        android:layout_alignParentStart="true"
         android:id="@+id/custom_fav"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -42,6 +50,8 @@
         app:right_drawable="@drawable/menu_right_dw"
         />
     <com.xiaoyu.schoolelive.custom.CustomBar
+        android:layout_below="@id/custom_fav"
+        android:layout_alignParentStart="true"
         android:id="@+id/custom_tname"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -51,6 +61,7 @@
         app:right_drawable="@drawable/menu_right_dw"
         />
     <com.xiaoyu.schoolelive.custom.CustomBar
+        android:layout_below="@id/custom_tname"
         android:id="@+id/custom_sex"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -60,6 +71,8 @@
         app:right_drawable="@drawable/menu_right_dw"
         />
     <com.xiaoyu.schoolelive.custom.CustomBar
+        android:layout_below="@id/custom_sex"
+        android:layout_alignParentStart="true"
         android:id="@+id/custom_bri"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -69,6 +82,8 @@
         app:right_drawable="@drawable/menu_right_dw"
         />
     <com.xiaoyu.schoolelive.custom.CustomBar
+        android:layout_below="@id/custom_bri"
+        android:layout_alignParentStart="true"
         android:id="@+id/custom_address"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -78,4 +93,4 @@
         app:right_drawable="@drawable/menu_right_dw"
         />
 
-</LinearLayout>
+</RelativeLayout>

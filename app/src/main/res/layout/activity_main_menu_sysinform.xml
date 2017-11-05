@@ -7,10 +7,7 @@
     <!-- tabhost用来存放标签对象
     在标签页中,每一页和这一页的内容,是垂直摆放的所以这里用到了线性布局
     -->
-    <include
-        layout="@layout/include_toolbar"/>
     <LinearLayout
-        android:layout_marginTop="@dimen/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -19,8 +16,7 @@
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </TabWidget>
+            android:layout_height="wrap_content"></TabWidget>
         <!--android:id="@android:id/tabcontent"这个是在系统文件中定义的也,是写死的-->
         <FrameLayout
             android:id="@android:id/tabcontent"

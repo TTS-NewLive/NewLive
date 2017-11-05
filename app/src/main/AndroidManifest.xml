@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.xiaoyu.schoolelive">
-
-    <provider
-        android:name="android.support.v4.content.FileProvider"
-        android:authorities="com.xiaoyu.schoolelive.fileprovider"
-        android:exported="false"
-        android:grantUriPermissions="true">
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/provider_path" />
-    </provider>
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -30,13 +20,14 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
-        android:name="com.mob.MobApplication"
+        android:name=".base.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/simpleBlue.">
+
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -87,7 +78,6 @@
         <activity android:name=".activities.RegistActivity" />
 
 
-        <activity android:name=".activities.SysSetShareActivity" />
         <activity android:name=".activities.SystemSettingActivity" />
         <activity android:name=".activities.UserAlbumActivity" />
         <activity android:name=".activities.UserCenterActivity" />
@@ -118,11 +108,54 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".activities.PreViewImgActivity" />
-        <activity android:name=".activities.SysSetBindActivity" />
         <activity android:name=".activities.UserAddGoodsActivity" />
         <activity android:name=".custom.CustomBGAPhotoPreviewActivity" />
         <activity android:name=".activities.SignCalenderActivity">
         </activity>
+        <activity android:name=".activities.UPActivity"/>
+        <activity
+            android:name="com.xiaoyu.schoolelive.activities.ConversationActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.xiaoyu.schoolelive"
+                    android:pathPrefix="/conversation/"
+                    android:scheme="rong" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.xiaoyu.schoolelive.activities.ConversationListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="com.xiaoyu.schoolelive"
+                    android:pathPrefix="/conversation/"
+                    android:scheme="rong" />
+            </intent-filter>
+
+        </activity>
+        <provider
+            tools:replace="android:authorities"
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.xiaoyu.schoolelive.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                tools:replace="android:resource"
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/rc_file_path" />
+        </provider>
     </application>
 
 </manifest>

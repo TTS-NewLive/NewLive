@@ -1,14 +1,8 @@
 package com.xiaoyu.schoolelive.activities;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
-import android.widget.Toast;
 
 import com.xiaoyu.schoolelive.R;
 import com.xiaoyu.schoolelive.adapter.SysInformAdapter;
 import com.xiaoyu.schoolelive.data.SysInform;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +32,7 @@ public class SysInformFragment extends Fragment {
     private TabHost tabHost;
     private RecyclerView general_rcview;
     private static final int No_1 = 0x1;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,6 +117,8 @@ public class SysInformFragment extends Fragment {
     public void onStop() {
         super.onStop();
     }
+
+
 
 }
 
