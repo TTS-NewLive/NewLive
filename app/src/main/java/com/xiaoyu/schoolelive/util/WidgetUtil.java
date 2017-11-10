@@ -2,7 +2,6 @@ package com.xiaoyu.schoolelive.util;
 
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 /**
  * Created by xiaoyao on 2017/8/18.
@@ -20,7 +19,13 @@ public class WidgetUtil {
         }
         return null;
     }
-    public static String str_trim(String str) {//去除字符串中的所有空格(用来去掉服务器返回路径中的空格)
+    public static String str_trim(String str)
+    {//去除字符串中的所有空格(用来去掉服务器返回路径中的空格)
         return str.replaceAll(" ", "");
+    }
+
+    public static String str_yinhao(String str)
+    {//去除字符串中的所有'符号
+        return str.replaceAll("\'", "");
     }
 }

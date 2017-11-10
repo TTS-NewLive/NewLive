@@ -33,6 +33,7 @@ public class Goods implements Serializable{
     public boolean isAgainst = false;
     public boolean isCollection = false;
     public int  status = 0;//加载状态
+    public int isSell;
 
     public int getMinPrice() {
         return minPrice;
@@ -192,5 +193,13 @@ public class Goods implements Serializable{
 
     public String getUid() {
         return uid;
+    }
+
+    public void setIsSell(int isSell) {
+        this.isSell = isSell;
+    }
+
+    public int getIsSell() {
+        return isSell;
     }
 }

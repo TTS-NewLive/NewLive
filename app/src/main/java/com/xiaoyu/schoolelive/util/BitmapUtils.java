@@ -263,7 +263,7 @@ public class BitmapUtils {
 
     /**
      * Gets the content:// URI from the given corresponding path to a file
-     *
+     *将file转化为Uri
      * @param context
      * @param imageFile
      * @return content Uri
@@ -296,5 +296,6 @@ public class BitmapUtils {
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
     }
+
 
 }

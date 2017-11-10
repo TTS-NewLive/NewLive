@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +36,6 @@ import com.xiaoyu.schoolelive.custom.CustomImageDialogView;
 import com.xiaoyu.schoolelive.data.User;
 import com.xiaoyu.schoolelive.util.ACache;
 import com.xiaoyu.schoolelive.util.BitmapUtils;
-import com.xiaoyu.schoolelive.util.Common_msg_cache;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
 import com.xiaoyu.schoolelive.util.HttpUtil;
 import com.xiaoyu.schoolelive.util.Login_cache;
@@ -48,9 +49,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.rong.imkit.RongIM;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -97,6 +100,9 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     user_cache.setSignature(signature);
                     user_cache.setSex(sex);
                     User_cache.set_user_info_Cache(UserInfo.this,user_cache);
+
+                    //将更新的用户信息传到融云的服务器
+                    RongIM.getInstance().refreshUserInfoCache(new io.rong.imlib.model.UserInfo(uid, name, Uri.parse(photo)));
                     break;
                 case 1://昵称
                     if(String.valueOf("226").equals(data)){
@@ -138,9 +144,14 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                         Toast.makeText(UserInfo.this,data, Toast.LENGTH_LONG).show();
                         break;
                     }
+                case 5:
+                    init();//初始化信息
+
             }
         }
     }
+    public static final int TAKE_PHOTO = 1;
+    private Uri imageUri;
     public String uid ;//用户的id
     private CustomBar custom_fname, custom_about, custom_fav, custom_tname, custom_sex;
     private CircleImageView mPhoto;
@@ -153,6 +164,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
     int[] screenSize = null;
     int mWidth ;
     int mHeigh ;
+    private Bitmap bitmap;
     final String[] items = new String[]{"拍照", "从手机相册选择", "查看头像"};
     public static Bitmap bigImg = null;
     /* 头像文件 */
@@ -165,10 +177,10 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
 
     private TextView tv;
     private ImageView ig;
+    List<String> permissionList ;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-
         tv = (TextView)findViewById(R.id.toolbarTitle);
         tv.setText("编辑资料");
         ig = (ImageView)findViewById(R.id.toolbarBack);
@@ -178,7 +190,6 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                 finish();
             }
         });
-
         handler = new MyHandler();
 
         mPhoto = (CircleImageView) findViewById(R.id.mPhoto);//图像对象
@@ -214,7 +225,6 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
             String real_name = get_cache_user.getReal_name();
             String signature = get_cache_user.getSignature();
             String sex = get_cache_user.getSex();
-
             Glide.with(UserInfo.this)//将选中的图片放到imageview中
                     .load(photo)
                     .error(R.drawable.qq_login)
@@ -227,11 +237,12 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
             } else if (String.valueOf("1").equals(sex)) {
                 custom_sex.setInfo_menu_info("女");
             }
+            RongIM.getInstance().refreshUserInfoCache(new io.rong.imlib.model.UserInfo(uid, name, Uri.parse(photo)));
         }else{
             init();//进入个人信息界面的时候初始话信息
         }
-
     }
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mPhotoLinearLayout:
@@ -246,15 +257,49 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     //注册点击事件
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
-                            case 0:
-                                choseHeadImageFromCameraCapture();//手机拍照选择图片
+                            case 0://摄像头申请多个权限
+                                permissionList = new ArrayList<String>();//权限组(一次申请多个权限)
+                                if (ContextCompat.checkSelfPermission(UserInfo.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {//相等就说明授权
+                                    {
+                                        permissionList.add(Manifest.permission.CAMERA);
+                                    }
+                                }
+                                if (ContextCompat.checkSelfPermission(UserInfo.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//相等就说明授权
+                                    {
+                                        permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                    }
+                                }
+                                if (ContextCompat.checkSelfPermission(UserInfo.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//相等就说明授权
+                                    {
+                                        permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                                    }
+                                }
+                                if(!permissionList.isEmpty()){
+                                    String [] permissions = permissionList.toArray(new String[permissionList.size()]);
+                                    ActivityCompat.requestPermissions(UserInfo.this,permissions,2);
+                                }else{
+                                    choseHeadImageFromCameraCapture();
+                                }
                                 break;
-                            case 1:
-                                choseHeadImageFromGallery();//相册中选择图片
+                            case 1://相册申请多个权限
+                                permissionList = new ArrayList<String>();//权限组(一次申请多个权限)
+                                if (ContextCompat.checkSelfPermission(UserInfo.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//相等就说明授权
+                                    {
+                                        permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                    }
+                                }
+                                if (ContextCompat.checkSelfPermission(UserInfo.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//相等就说明授权
+                                    {
+                                        permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                                    }
+                                }
+                                if(!permissionList.isEmpty()){
+                                    String [] permissions = permissionList.toArray(new String[permissionList.size()]);
+                                    ActivityCompat.requestPermissions(UserInfo.this,permissions,1);
+                                }else{
+                                    choseHeadImageFromGallery();
+                                }
                                 break;
-//                            case 2:
-//                                choseHeadImageFromApp();//从app中选择图片
-//                                break;
                             case 2://查看图片
                                 //Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                                 CustomImageDialogView.Builder dialogBuild = new CustomImageDialogView.Builder(UserInfo.this);
@@ -441,10 +486,6 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                         .setNegativeButton("取消", null)
                         .show();
                 break;
-//            case R.id.custom_address:
-//                intent = new Intent(UserInfo.this, MySpinnerActivity.class);
-//                startActivity(intent);
-//               break;
         }
     }
     private void init(){//进入界面更新数据
@@ -492,8 +533,10 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
     }
 
     // 启动手机相机拍摄照片作为头像
-    private void choseHeadImageFromCameraCapture() {
-        Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    private void  choseHeadImageFromCameraCapture() {
+
+        //旧方法
+      /*  Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // 判断存储卡是否可用，存储照片文件
         if (hasSdcard()) {
@@ -501,18 +544,29 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     .fromFile(new File(Environment
                             .getExternalStorageDirectory(), IMAGE_FILE_NAME)));
         }
-        startActivityForResult(intentFromCapture, CODE_CAMERA_REQUEST);
+        startActivityForResult(intentFromCapture, CODE_CAMERA_REQUEST);*/
+
+      //第一行代码里面的方法
+       File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
+        try {
+            if (outputImage.exists()) {
+                outputImage.delete();
+            }
+            outputImage.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (Build.VERSION.SDK_INT < 24) {
+            imageUri = Uri.fromFile(outputImage);
+        } else {
+            imageUri = FileProvider.getUriForFile(UserInfo.this, "com.xiaoyu.schoolelive.fileprovider", outputImage);
+        }
+        // 启动相机程序
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, TAKE_PHOTO);
     }
 
-    // 从APP用户相册中选择图片作为头像
-//    private void choseHeadImageFromApp() {
-//        Intent intentFromApp = new Intent();
-//        intentFromApp.setClass(getApplication(), UserAlbumActivity.class);
-//        //标记是从头像选择页面跳转过去的
-//        intentFromApp.putExtra("motive", CODE_APP_REQUEST);
-//        startActivity(intentFromApp);
-//        //startActivityForResult(intentFromApp, CODE_APP_REQUEST);
-//    }
     /**
      * 检查设备是否存在SDCard的工具方法
      */
@@ -526,90 +580,66 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
         }
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent intent) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         // 用户没有进行有效的设置操作，返回
         if (resultCode == RESULT_CANCELED) {//取消
             Toast.makeText(getApplication(), "取消", Toast.LENGTH_LONG).show();
             return;
         }
         switch (requestCode) {
-            case CODE_GALLERY_REQUEST://如果是来自本地的
+            case CODE_GALLERY_REQUEST://如果是来自本地相册的
                 Glide.with(UserInfo.this)//将选中的图片放到imageview 中
                         .load(intent.getData())
-                       .error(R.drawable.qq_login)
+                        .error(R.drawable.qq_login)
                         .into(mPhoto);
                 bigImg = BitmapUtils.decodeUri(UserInfo.this, intent.getData(), mWidth, mHeigh);
                 //新建文件夹 先选好路径 再调用mkdir函数 现在是根目录下面的Ask文件夹
                 //申请运行时权限(安卓版本大于6.0的时候就需要申请运行时权限)
-                if(ContextCompat.checkSelfPermission(UserInfo.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){//相等就说明授权
-                    ActivityCompat.requestPermissions(UserInfo.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-                }else {
-                    try {
+                try {
                         File image = saveFile(bigImg, "photo");
                         uploadMultiFile(uid, image);//上传文件到服务器
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-
-                //cropRawPhoto(intent.getData());//直接裁剪图片
                 break;
-            case CODE_CAMERA_REQUEST://如果是来自摄像头
-                if (hasSdcard()) {
-                    File tempFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
-                    Toast.makeText(UserInfo.this, tempFile.toString(), Toast.LENGTH_LONG).show();
-                    //Bitmap bm= BitmapFactory.decodeFile(tempFile.toString());
-                    //mPhoto.setImageBitmap(bm);
-
-                    //将选中的图片放到头像中
-                    Glide.with(UserInfo.this)
-                            .load(Uri.fromFile(tempFile))
-                            .error(R.drawable.qq_login)
-                            .into(mPhoto);
-                    //将选中的图像保存
-                    bigImg = BitmapUtils.decodeUri(UserInfo.this, Uri.fromFile(tempFile), mWidth, mHeigh);
-                    //cropRawPhoto();
-                    //新建文件夹 先选好路径 再调用mkdir函数 现在是根目录下面的Ask文件夹
-//                    try {
-//                        File image = saveFile(BitmapFactory.decodeFile(tempFile.toString()), "photo");
-//                        uploadMultiFile(uid, image);//上传文件到服务器
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                } else {
-                    Toast.makeText(getApplication(), "没有SDCard!", Toast.LENGTH_LONG)
-                            .show();
-                }
+            case TAKE_PHOTO://如果是来自摄像头
+                // 将拍摄的照片显示出来
+                        send_picture();
                 break;
-//            case CODE_APP_REQUEST:
-//                Toast.makeText(getApplication(), "这是APP", Toast.LENGTH_SHORT).show();
-//                Uri imgUri = Uri.parse(intent.getStringExtra("image_uri"));
-//                cropRawPhoto(imgUri);
-//                break;
-//            case CODE_RESULT_REQUEST:
-//                if (intent != null) {
-//                    setImageToHeadView(intent);//设置图片框
-//                }
-//                break;
+            default:break;
         }
-        super.onActivityResult(requestCode, resultCode, intent);
     }
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
-            case 1:
-                if(grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    try {
-                        File image = saveFile(bigImg, "photo");
-                        uploadMultiFile(uid, image);//上传文件到服务器
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            case 1://调用相册的权限
+                if(grantResults.length>0){
+                    for(int result:grantResults){
+                        if(result != PackageManager.PERMISSION_GRANTED){
+                            Toast.makeText(UserInfo.this,"必须同意所有权限才能使用本程序",Toast.LENGTH_LONG).show();
+                            finish();
+                            return;
+                        }
                     }
+                    choseHeadImageFromGallery();
                 }else {
-                    Toast.makeText(this, "您拒绝了该权限", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            default:break;
+            case 2://调用摄像头的权限
+               if(grantResults.length>0){
+                   for(int result:grantResults){
+                       if(result != PackageManager.PERMISSION_GRANTED){
+                           Toast.makeText(UserInfo.this,"必须同意所有权限才能使用本程序",Toast.LENGTH_LONG).show();
+                           finish();
+                           return;
+                       }
+                   }
+                   choseHeadImageFromCameraCapture();
+               }else {
+                   Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
+               }
+                break;
+
         }
     }
     /**
@@ -629,7 +659,6 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
         intent.putExtra("outputY", output_Y);
         intent.putExtra("return-data", true);
         bigImg = BitmapUtils.decodeUri(UserInfo.this, uri, mWidth, mHeigh);
-
         startActivityForResult(intent, CODE_RESULT_REQUEST);
 
     }
@@ -649,30 +678,8 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //File image = saveFile(photo, "photo");
-            //Toast.makeText(UserCenterActivity.this,image.getPath(),Toast.LENGTH_LONG).show();
-            //  uploadMultiFile(2015404, file);//上传文件到服务器
-            //Toast.makeText(UserCenterActivity.this,file.getPath(),Toast.LENGTH_LONG).show();
-            /* File nf = new File(Environment.getExternalStorageDirectory() + "/Ask");
-            nf.mkdir();
-            //在根目录下面的ASk文件夹下 创建okkk.jpg文件
-            File f = new File(Environment.getExternalStorageDirectory() + "/Ask", "okkk.png");
-            FileOutputStream out = null;
-            try {//打开输出流 将图片数据填入文件中
-                out = new FileOutputStream(f);
-                photo.compress(Bitmap.CompressFormat.PNG, 90, out);
-                try {
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
         }
     }
-
     public File saveFile(Bitmap bm, String fileName) throws IOException {//将Bitmap类型的图片转化成file类型，便于上传到服务器
         String path = Environment.getExternalStorageDirectory() + "/photo";//用户图像
         File dirFile = new File(path);
@@ -711,10 +718,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
             }
 
             public void onResponse(Call call, Response response) throws IOException {
-               // Message msg = new Message();
-               // msg.obj = response.body().string();
-               // handler.sendMessage(msg);
-                Log.e("token",response.body().string());
+                init();//拍照修改头像之后初始化数据
             }
         });
 
@@ -722,6 +726,19 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
 
     public String str_trim(String str) {//去除字符串中的所有空格(用来去掉服务器返回路径中的空格)
         return str.replaceAll(" ", "");
+    }
+
+    private void send_picture(){//发送图片到服务器
+        // 将拍摄的照片显示出来
+        try {//动态申请权限,写文件Read的权限
+            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+            mPhoto.setImageBitmap(bitmap);
+            File image = saveFile(bitmap,"photo");
+            uploadMultiFile(uid,image);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("token",e.getMessage());
+        }
     }
 
 

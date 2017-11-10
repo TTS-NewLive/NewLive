@@ -52,6 +52,8 @@ public class SecondHandFragment extends Fragment {
     private WaterFallAdapter mAdapter;
     private RefreshLayout refreshLayout;
     public static Context mcontext;
+    public static int ONSELL = 0;//未销售
+    public static int SELLED = 1;//已销售
 
     public Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -62,37 +64,42 @@ public class SecondHandFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String goods_id = jsonObject.getString("goods_id");
-                    String uid = jsonObject.getString("uid");
                     String top_image = jsonObject.getString("top_image");
                     String goods_name = jsonObject.getString("goods_name");
                     int goods_price = jsonObject.getInt("goods_price");
                     String goods_description = jsonObject.getString("goods_description");
                     int goods_type = jsonObject.getInt("goods_type");
+                    int isSell = jsonObject.getInt("isSell");
+                    int minPrice = jsonObject.getInt("bids");//每次加价不小于
                     Goods goods = new Goods();
                     final String str = ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(top_image);
                     ImageBean bean = new ImageBean();
                     bean.setImgsrc(str);
                     goods.setGoods_id(goods_id);
-                    goods.setUid(uid);
                     goods.setTopImage(bean);//设置封面图片
                     goods.setPageViews(goods_price);  //设置商品浏览量
                     goods.setGoodsName(goods_name);//设置商品名称
                     goods.setGoodsIntro(goods_description);//设置商品介绍
                     goods.setGoodsStyle(ConstantUtil.Goods_New); //设置顶热新商品属性
                     goods.setGoodsType(goods_type); //设置商品出售方式
-                    setPrice(goods, goods.getGoodsType(), goods_price);//设置商品价格
-                   // goodsList.add(goods);
-                    cache_goods.add(goods);
+                    goods.setIsSell(isSell);
+                    goods.setMinPrice(minPrice);
+                    setPrice(goods, goods.getGoodsType(), goods_price, minPrice);//设置商品价格
+                    // goodsList.add(goods);
+                    if (goods.getIsSell() == ONSELL) {
+                        cache_goods.add(goods);
+                    }
                 }
-                Common_msg_cache.set_goods_Cache(getContext(),cache_goods);//将商品信息存入缓存
+                Common_msg_cache.set_goods_Cache(getContext(), cache_goods);//将商品信息存入缓存
                 Common_msg_cache.set_goods_cache_status(getContext(), ConstantUtil.Goods_Piece);//第一次将数据添加到缓存中的时候，将加载状态设置为0
+
                 for (int i = 0; i < ConstantUtil.Goods_Piece; i++) {
                     mAdapter.getList().add(cache_goods.get(i));//第一次进来加载5条
                 }
                 //mAdapter.getList().addAll(goodsList);
                 mAdapter.getRandomHeight(cache_goods);
                 mAdapter.notifyDataSetChanged();
-                Toast.makeText(getContext(), "存入缓存成功", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getContext(), "存入缓存成功", Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -115,8 +122,20 @@ public class SecondHandFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {//设置上拉刷新监听器
 
             public void onRefresh(RefreshLayout refreshlayout) {
-                refresh_goods_cache();
-                mAdapter.notifyDataSetChanged();
+                //这一段话是小黑写的
+                Common_msg_cache.set_goods_Cache(getContext(), null);
+                mAdapter.getList().clear();
+                HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "query_goods.php", new Callback() {
+                    public void onFailure(Call call, IOException e) {
+                    }
+
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String str = response.body().string();
+                        Message msg = new Message();
+                        msg.obj = str;
+                        handler.sendMessage(msg);
+                    }
+                });
                 refreshlayout.finishRefresh();
             }
         });
@@ -124,7 +143,6 @@ public class SecondHandFragment extends Fragment {
 
             public void onLoadmore(RefreshLayout refreshlayout) {
                 add_goods(refreshlayout);
-                //refresh_goods_cache();
                 refreshlayout.finishLoadmore();
             }
         });
@@ -177,7 +195,7 @@ public class SecondHandFragment extends Fragment {
             ArrayList<Goods> cache_goods = Common_msg_cache.get_goods_Cache(getContext());
             int index = Common_msg_cache.get_goods_cache_status(getContext());//得到上次读取到第几条数据
             mAdapter.getList().clear();//加载之前将原来的list删除
-            for (int i = 0; i < index; i++) {
+            for (int i = 0; i < Common_msg_cache.get_goods_Cache(getActivity()).size(); i++) {
                 mAdapter.getList().add(cache_goods.get(i));
             }
             mAdapter.getRandomHeight(cache_goods);
@@ -188,18 +206,21 @@ public class SecondHandFragment extends Fragment {
 
         mAdapter.setOnItemClickListener(new WaterFallAdapter.OnItemClickListener() {
             public void onItemClick(View view, int position) {
-                Goods goods = new Goods();
+
+                Goods goods;
                 ArrayList<Goods> cache_goods = Common_msg_cache.get_goods_Cache(getContext());
-               // goods = goodsList.get(position);
+                // goods = goodsList.get(position);
                 goods = cache_goods.get(position);
                 Intent intent = new Intent(getActivity(), GoodsInfoActivity.class);
                 intent.putExtra("tmp_goodsid", goods.getGoods_id());//传递商品id
-                intent.putExtra("tmp_uid",goods.getUid());
                 intent.putExtra("tmp_goodsname", goods.getGoodsName());//传递商品名称
                 intent.putExtra("tmp_intro", goods.getGoodsIntro());//传递商品介绍
                 intent.putExtra("tmp_pageViews", String.valueOf(goods.getPageViews()));
                 intent.putExtra("tmp_goodsStyle", goods.getGoodsStyle());
                 intent.putExtra("tmp_goodsType", goods.getGoodsType());
+                intent.putExtra("tmp_isSell", goods.getIsSell());
+                intent.putExtra("tmp_position", position);
+                intent.putExtra("tmp_minPrice", goods.getMinPrice());
                 toIntentPrice(intent, goods);
                 startActivity(intent);
             }
@@ -209,6 +230,7 @@ public class SecondHandFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
                 //mAdapter.removeData(position);
             }
+
         });
     }
 
@@ -216,35 +238,36 @@ public class SecondHandFragment extends Fragment {
         if (goods.getGoodsType() == ConstantUtil.Goods_Type_ykj) {
             intent.putExtra("tmp_ykjPrice", String.valueOf(goods.getPrice()));
         } else if (goods.getGoodsType() == ConstantUtil.Goods_Type_yj) {
-           // intent.putExtra("tmp_yjPrice", String.valueOf(goods.getRefPrice()));
+            // intent.putExtra("tmp_yjPrice", String.valueOf(goods.getRefPrice()));
             intent.putExtra("tmp_yjPrice", String.valueOf(goods.getPrice()));
         } else if (goods.getGoodsType() == ConstantUtil.Goods_Type_pai) {
-           // intent.putExtra("tmp_basePrice", String.valueOf(goods.getBasePrice()));
-           // intent.putExtra("tmp_nowPrice", String.valueOf(goods.getNowPrice()));
-           // intent.putExtra("tmp_minPrice", String.valueOf(goods.getMinPrice()));
-             intent.putExtra("tmp_basePrice", String.valueOf(goods.getPrice()));
-             intent.putExtra("tmp_nowPrice", String.valueOf(goods.getPrice()));
-             intent.putExtra("tmp_minPrice", String.valueOf(goods.getPrice()));
+            // intent.putExtra("tmp_basePrice", String.valueOf(goods.getBasePrice()));
+            // intent.putExtra("tmp_nowPrice", String.valueOf(goods.getNowPrice()));
+            // intent.putExtra("tmp_minPrice", String.valueOf(goods.getMinPrice()));
+            //intent.putExtra("tmp_basePrice", String.valueOf(goods.getPrice()));
+            intent.putExtra("tmp_nowPrice", String.valueOf(goods.getNowPrice()));
+            intent.putExtra("tmp_minPrice", String.valueOf(goods.getMinPrice()));
         }
     }
 
-    public static void setPrice(Goods goods, int type, int pirce) {
+    public static void setPrice(Goods goods, int type, int pirce, int minPrice) {
         if (type == ConstantUtil.Goods_Type_ykj) {
             goods.setPrice(pirce);
         } else if (type == ConstantUtil.Goods_Type_yj) {
             goods.setRefPrice(pirce);
         } else if (type == ConstantUtil.Goods_Type_pai) {
-            goods.setBasePrice(pirce);
+            //goods.setBasePrice(pirce);
             goods.setNowPrice(pirce);
-            goods.setMinPrice(pirce);
+            goods.setMinPrice(minPrice);
         }
     }
 
     private void getGoodsData() {//向服务器请求数据
         HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "query_goods.php", new Callback() {
             public void onFailure(Call call, IOException e) {
-            Log.i("iii",e.getMessage());
+                Log.i("iii", e.getMessage());
             }
+
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
                 Message msg = new Message();
@@ -252,17 +275,7 @@ public class SecondHandFragment extends Fragment {
                 handler.sendMessage(msg);
             }
         });
-        // Goods goods = new Goods();
-        // String imgsrc = BitmapSampleUtil.getBmpUrl();
-           /* final String str = "http://imgsrc.baidu.com/imgad/pic/item/267f9e2f07082838b5168c32b299a9014c08f1f9.jpg";
-            ImageBean bean = new ImageBean();
-            bean.setImgsrc(str);
-            goods.setTopImage(bean);//设置封面图片
-            goods.setPageViews(50);  //设置商品浏览量
-            goods.setGoodsStyle(ConstantUtil.Goods_New); //设置顶热新商品属性
-            goods.setGoodsType(ConstantUtil.Goods_Type_yj); //设置商品出售方式
-            setPrice(goods, goods.getGoodsType());//设置商品价格
-            goodsList.add(goods);*/
+
         mAdapter.getList().addAll(goodsList);
         mAdapter.getRandomHeight(goodsList);
         mAdapter.notifyDataSetChanged();
@@ -280,63 +293,43 @@ public class SecondHandFragment extends Fragment {
                         Common_msg_cache.add_goods_cache_status(getContext(), index + number);
                     }
                 } else if (number == 0) {
-                    Toast.makeText(getContext(), "当前没有更多商品", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "当前没有更多商品，刷新试试！", Toast.LENGTH_SHORT).show();
                     refreshlayout.finishLoadmore();
                     return;
                 }
             } else {//缓存中信息的商品数多于5条
                 for (int i = index; i < index + ConstantUtil.Goods_Piece; i++) {//缓存中数据充足，加载4条
+
                     mAdapter.getList().add(cache_goods.get(i));
+
                 }
                 Common_msg_cache.add_goods_cache_status(getContext(), index + ConstantUtil.Goods_Piece);
             }
             mAdapter.getRandomHeight(cache_goods);
             mAdapter.notifyDataSetChanged();
-           // Toast.makeText(getContext(), "缓存中读取", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void add_goods(Context context) {//从缓存中添加商品
-        if (Common_msg_cache.get_goods_Cache(context) != null) {//判断缓存中是否存在旧货信息
-            ArrayList<Goods> cache_goods = Common_msg_cache.get_goods_Cache(context);
-            int index = Common_msg_cache.get_goods_cache_status(context);//得到上次读取到第几条数据
-            int number = Math.abs(index - cache_goods.size());
-            if (number < ConstantUtil.Goods_Piece) {//如果缓存中的信息少于5条
-                if (number != 0) {//有多少条，加多少条
-                    for (int i = index; i < index + number; i++) {
-                        mAdapter.getList().add(cache_goods.get(i));
-                        Common_msg_cache.add_goods_cache_status(context, index + number);
-                    }
-                }
-            } else {//缓存中信息的商品数多于5条
-                for (int i = index; i < index + ConstantUtil.Goods_Piece; i++) {//缓存中数据充足，加载4条
-                    mAdapter.getList().add(cache_goods.get(i));
-                }
-                Common_msg_cache.add_goods_cache_status(context, index + ConstantUtil.Goods_Piece);
-            }
-            mAdapter.getRandomHeight(cache_goods);
-            mAdapter.notifyDataSetChanged();
-            Toast.makeText(context, "缓存中读取", Toast.LENGTH_SHORT).show();
-        }
-    }
-    public   void refresh_goods_cache(){
+    //更新缓存
+    public void refresh_goods_cache() {
         final ArrayList<Goods> cache_goods_refresh = new ArrayList<>();
         HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "query_goods.php", new Callback() {
             public void onFailure(Call call, IOException e) {
-                Log.i("iii",e.getMessage());
+                Log.i("iii", e.getMessage());
             }
+
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     JSONArray jsonArray = new JSONArray(response.body().string());
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String goods_id = jsonObject.getString("goods_id");
-                        String uid = jsonObject.getString("uid");
                         String top_image = jsonObject.getString("top_image");
                         String goods_name = jsonObject.getString("goods_name");
                         int goods_price = jsonObject.getInt("goods_price");
                         String goods_description = jsonObject.getString("goods_description");
                         int goods_type = jsonObject.getInt("goods_type");
+                        int minPrice = jsonObject.getInt("bids");
                         Goods goods = new Goods();
                         final String str = ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(top_image);
                         ImageBean bean = new ImageBean();
@@ -348,21 +341,21 @@ public class SecondHandFragment extends Fragment {
                         goods.setGoodsIntro(goods_description);//设置商品介绍
                         goods.setGoodsStyle(ConstantUtil.Goods_New); //设置顶热新商品属性
                         goods.setGoodsType(goods_type); //设置商品出售方式
-                        setPrice(goods, goods.getGoodsType(), goods_price);//设置商品价格
+
+                        //修改
+                        setPrice(goods, goods.getGoodsType(), goods_price, minPrice);//设置商品价格
                         // goodsList.add(goods);
                         cache_goods_refresh.add(goods);
-
                     }
-
-                    Common_msg_cache.refresh_goods_Caches(getContext(),cache_goods_refresh);
-                   // Toast.makeText(getContext(),"更新缓存成功",Toast.LENGTH_LONG).show();
+                    Common_msg_cache.refresh_goods_Caches(getContext(), cache_goods_refresh);
+                    // Toast.makeText(getContext(),"更新缓存成功",Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e("eeee",e.getMessage());
                 }
             }
         });
     }
+
 
 }
 

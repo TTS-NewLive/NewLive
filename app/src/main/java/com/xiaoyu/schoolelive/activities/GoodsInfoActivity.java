@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,6 +27,7 @@ import com.xiaoyu.schoolelive.custom.MyListView;
 import com.xiaoyu.schoolelive.data.Goods;
 import com.xiaoyu.schoolelive.data.JPUser;
 import com.xiaoyu.schoolelive.util.ACache;
+import com.xiaoyu.schoolelive.util.Common_msg_cache;
 import com.xiaoyu.schoolelive.util.ConstantUtil;
 import com.xiaoyu.schoolelive.util.HttpUtil;
 import com.xiaoyu.schoolelive.util.Login_cache;
@@ -49,14 +51,18 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.mob.MobSDK.getContext;
+
 /**
  * Created by NeekChaw on 2017-07-29.
  */
 
 
 public class GoodsInfoActivity extends AppCompatActivity implements View.OnClickListener {
+    public static int ONSELL = 0;//未销售
+    public static int SELLED = 1;//已销售
     //竞拍
-    private TextView mBasePrice;
+    //private TextView mBasePrice;
     private TextView mNowPrice;
     private TextView mMinPrice;
     //竞拍列表控件
@@ -68,6 +74,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     //可议价
     private TextView mRefPrice;
 
+    private String goods_id;
+    private String seller_id;
     private ImageView btn_more;
     private ImageView btn_back;
     private Button btn_pai;
@@ -86,8 +94,27 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     private View mGoodsYJ;
     private View mGoodIntro_view;
     private BGABanner mGoodsImages;
-    final String[] mItems = new String[]{"卖家详情", "举报","聊天"};
+    final String[] mItems = new String[]{"卖家详情", "举报","联系卖家"};
     final String[] mAgainstItems = new String[]{"泄露隐私", "人身攻击", "淫秽色情", "垃圾广告", "敏感信息", "其他"};
+    private Handler handler2 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //判断交易是否成功
+            String result = (String) msg.obj;
+            if (String.valueOf(1).equals(result)) {
+                btn_ykj.setEnabled(false);
+                //btn_ykj.setBackground(getResources().getDrawable(R.drawable.btn_selled_bg));
+                btn_ykj.setBackgroundResource(R.drawable.btn_selled_bg);
+                btn_ykj.setText("已售");
+                //这句话是小黑写的
+                Common_msg_cache.get_goods_Cache(getContext()).get(getIntent().getIntExtra("tmp_position", SELLED)).setIsSell(SELLED);
+                Toast.makeText(GoodsInfoActivity.this, "交易成功", Toast.LENGTH_SHORT).show();
+            } else if (String.valueOf(2).equals(result)) {
+                Toast.makeText(GoodsInfoActivity.this, "交易失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -119,11 +146,6 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_goods_info);
         goods = new Goods();
-        if (get_sell_id() != null){
-            Toast.makeText(this, get_sell_id(), Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this, "kkkkk", Toast.LENGTH_SHORT).show();
-        }
         initView();
 
     }
@@ -135,7 +157,7 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         //  Toast.makeText(getApplicationContext(),intent.getStringExtra("tmp_goodsname"),Toast.LENGTH_SHORT).show();
         //setGoodsName(intent.getStringExtra("tmp_goodsname"));
         //设置商品类型
-        setGoodsType(intent.getIntExtra("tmp_goodsType", 0));
+        setGoodsType(intent, intent.getIntExtra("tmp_goodsType", 0));
 
         //设置商品名称
         setGoodsName(intent.getIntExtra("tmp_goodsType", 0), intent.getStringExtra("tmp_goodsname"));
@@ -149,8 +171,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         //设置商品价格
         setGoodsPrice(intent, intent.getIntExtra("tmp_goodsType", 0));
 
-        String goods_id = intent.getStringExtra("tmp_goodsid");
-
+        goods_id = intent.getStringExtra("tmp_goodsid");
+        seller_id = intent.getStringExtra("tmp_uid");
         setGoodsImages(goods_id);
 
         // 初始化数据
@@ -185,7 +207,7 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         mGoodsYJ = findViewById(R.id.goodsType_yj);
 
         //竞拍价格
-        mBasePrice = (TextView) findViewById(R.id.pai_base_price);
+        //mBasePrice = (TextView) findViewById(R.id.pai_base_price);
         mNowPrice = (TextView) findViewById(R.id.pai_now_price);
         mMinPrice = (TextView) findViewById(R.id.pai_min_price);
 
@@ -245,7 +267,19 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                     handler.sendMessage(msg);
                 }
             });
-
+//            HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "query_one_goods.php", requestBody, new Callback() {
+//                public void onFailure(Call call, IOException e) {
+//
+//                }
+//
+//                public void onResponse(Call call, Response response) throws IOException {
+//                    final String responseData = response.body().string();
+//                    String result = responseData;
+//                    Message msg = Message.obtain();
+//                    msg.obj = result;
+//                    handler3.sendMessage(msg);
+//                }
+//            });
         }
 
 
@@ -305,23 +339,44 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    public void setGoodsType(int type) {
+    public void setGoodsType(Intent intent, int type) {
         if (type == ConstantUtil.Goods_Type_pai) {
             mGoodsName = (TextView) mGoodsPai.findViewById(R.id.goods_name);
             mGoodsPai.setVisibility(View.VISIBLE);
+            if (intent.getIntExtra("tmp_isSell", ONSELL) == SELLED) {
+                //btn_pai.setClickable(false);
+                btn_pai.setEnabled(false);
+                //btn_pai.setBackground(getResources().getDrawable(R.drawable.btn_selled_bg));
+                btn_ykj.setBackgroundResource(R.drawable.btn_selled_bg);
+                btn_pai.setText("已售");
+            }
         } else if (type == ConstantUtil.Goods_Type_yj) {
             mGoodsName = (TextView) mGoodsYJ.findViewById(R.id.goods_name);
             mGoodsYJ.setVisibility(View.VISIBLE);
+            if (intent.getIntExtra("tmp_isSell", ONSELL) == SELLED) {
+                // btn_yj_mai.setClickable(false);
+                btn_yj_mai.setEnabled(false);
+                //btn_yj_mai.setBackground(getResources().getDrawable(R.drawable.btn_selled_bg));
+                btn_ykj.setBackgroundResource(R.drawable.btn_selled_bg);
+                btn_yj_mai.setText("已售");
+            }
         } else if (type == ConstantUtil.Goods_Type_ykj) {
             mGoodsName = (TextView) mGoodsYKJ.findViewById(R.id.goods_name);
             mGoodsYKJ.setVisibility(View.VISIBLE);
+            if (intent.getIntExtra("tmp_isSell", ONSELL) == SELLED) {
+                //btn_ykj.setClickable(false);
+                btn_ykj.setEnabled(false);
+                //btn_ykj.setBackground(getResources().getDrawable(R.drawable.btn_selled_bg));
+                btn_ykj.setBackgroundResource(R.drawable.btn_selled_bg);
+                btn_ykj.setText("已售");
+            }
         }
     }
 
     public void setGoodsPrice(Intent intent, int type) {
         if (type == ConstantUtil.Goods_Type_pai) {
             mMinPrice.setText(intent.getStringExtra("tmp_minPrice"));
-            mBasePrice.setText(intent.getStringExtra("tmp_basePrice"));
+            //mBasePrice.setText(intent.getStringExtra("tmp_basePrice"));
             mNowPrice.setText(intent.getStringExtra("tmp_nowPrice"));
         } else if (type == ConstantUtil.Goods_Type_yj) {
             mRefPrice.setText(intent.getStringExtra("tmp_yjPrice"));
@@ -427,14 +482,13 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                         }else {
                             if(RongIM.getInstance() != null){
                                 //不让卖家的电话号码全部显示,中间4位用*表示
-                               // String encryption_sell_id = get_sell_id().substring(0,3)+"****"+get_sell_id().substring(7,11);//加密
-                                String now_id = Login_cache.get_login_username(getApplicationContext());
-
+                                // String encryption_sell_id = get_sell_id().substring(0,3)+"****"+get_sell_id().substring(7,11);//加密
                                 //String sell_id = get_sell_id();
-                               // RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this,now_id.equals(sell_id)?now_id:sell_id,now_id.equals(sell_id)?now_id:sell_id);
+                                // RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this,now_id.equals(sell_id)?now_id:sell_id,now_id.equals(sell_id)?now_id:sell_id);
                                 String encryption_sell_id =  get_sell_id().substring(0,3)+"****"+get_sell_id().substring(7,11);
                                 RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this,get_sell_id(),encryption_sell_id);
                             }
+
                         }
 
                 }
@@ -475,12 +529,12 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void showPaiDialog() {
         View view = View.inflate(this, R.layout.custom_dialog_pai, null);
-        TextView basePrice = (TextView) view.findViewById(R.id.basePrice);
+        //TextView basePrice = (TextView) view.findViewById(R.id.basePrice);
         TextView nowPrice = (TextView) view.findViewById(R.id.nowPrice);
         TextView addPrice = (TextView) view.findViewById(R.id.addPrice);
         final EditText yourPrice = (EditText) view.findViewById(R.id.pai_yoursPrice);
 
-        basePrice.setText(mBasePrice.getText().toString());
+        //basePrice.setText(mBasePrice.getText().toString());
         addPrice.setText(mMinPrice.getText().toString());
         nowPrice.setText(mNowPrice.getText().toString());
         final CustomDialog.Builder builder = new CustomDialog.Builder(GoodsInfoActivity.this);
@@ -513,7 +567,30 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String buyerId = Login_cache.get_login_username(getApplicationContext());
+                String sellerId = seller_id;
+                String goodsId = goods_id;
 
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("buyer_id", String.valueOf(buyerId))
+                        //.add("seller_id", sellerId)
+                        .add("goods_id", goodsId)
+                        .build();
+                HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "goods_deal.php", requestBody, new okhttp3.Callback() {
+                    public void onFailure(Call call, IOException e) {
+                        Toast.makeText(GoodsInfoActivity.this, "网络好像出问题了...", Toast.LENGTH_SHORT).show();
+                    }
+
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseData = response.body().string();
+                        String result = responseData;
+                        Log.d("GoodsInfo", result);
+                        Message msg = Message.obtain();
+                        msg.obj = result;
+                        handler2.sendMessage(msg);
+                    }
+                });
+                dialog.dismiss();
             }
         }).create().show();
     }
@@ -574,4 +651,5 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     private String get_sell_id(){
         return getIntent().getStringExtra("tmp_uid");
     }
+
 }

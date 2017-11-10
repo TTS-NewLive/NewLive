@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <!--<include layout="@layout/include_goods_thum_head" />-->
-        <RelativeLayout
+        <android.support.percent.PercentRelativeLayout
             android:id="@+id/goods_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -21,18 +21,19 @@
                 android:id="@+id/imageview"
                 android:layout_width="match_parent"
                 android:layout_height="210dp"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                app:layout_heightPercent="78%" />
 
             <ImageView
                 android:id="@+id/goods_new"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:background="@drawable/icon_new32" />
-        </RelativeLayout>
+        </android.support.percent.PercentRelativeLayout>
 
 
         <LinearLayout
@@ -70,10 +71,10 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:gravity="right"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1小时前"/>
+                    android:gravity="right"
+                    android:text="1小时前" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

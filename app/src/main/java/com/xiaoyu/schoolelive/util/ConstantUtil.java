@@ -5,7 +5,7 @@ package com.xiaoyu.schoolelive.util;
  */
 
 public class ConstantUtil {
-    public static String SERVICE_PATH = "http://139.199.181.68/xiaoyu/";
+    public static String SERVICE_PATH = "http://39.106.31.44/xiaoyu/";
 
     /**
      * 兼职类别

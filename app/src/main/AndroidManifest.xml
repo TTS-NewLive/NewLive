@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.xiaoyu.schoolelive">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -27,6 +30,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/simpleBlue.">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.xiaoyu.schoolelive.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -70,26 +82,20 @@
         <!-- MOD添加必要的权限 -->
 
         <activity android:name=".activities.AlbumImageDetailActivity" />
-        
         <activity android:name=".activities.FindActivity" />
         <activity android:name=".activities.HistoryCollectActivity" />
         <activity android:name=".activities.LoginActivity" />
-
         <activity android:name=".activities.RegistActivity" />
-
-
         <activity android:name=".activities.SystemSettingActivity" />
         <activity android:name=".activities.UserAlbumActivity" />
         <activity android:name=".activities.UserCenterActivity" />
-
         <activity android:name=".activities.UserInfo" />
-
         <activity android:name=".activities.UserReportActivity" />
+        <activity android:name=".activities.DealListActivity" />
 
         <uses-feature
             android:name="android.hardware.camera2"
             android:required="true" />
-
 
         <activity android:name=".activities.GoodsInfoActivity" />
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity" />
@@ -110,14 +116,12 @@
         <activity android:name=".activities.PreViewImgActivity" />
         <activity android:name=".activities.UserAddGoodsActivity" />
         <activity android:name=".custom.CustomBGAPhotoPreviewActivity" />
-        <activity android:name=".activities.SignCalenderActivity">
-        </activity>
-        <activity android:name=".activities.UPActivity"/>
+        <activity android:name=".activities.SignCalenderActivity"></activity>
+        <activity android:name=".activities.UPActivity" />
         <activity
-            android:name="com.xiaoyu.schoolelive.activities.ConversationActivity"
+            android:name=".activities.ConversationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -129,33 +133,35 @@
                     android:scheme="rong" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.xiaoyu.schoolelive.activities.ConversationListActivity"
+            android:name=".activities.ConversationListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.xiaoyu.schoolelive"
                     android:pathPrefix="/conversation/"
                     android:scheme="rong" />
             </intent-filter>
-
         </activity>
-        <provider
-            tools:replace="android:authorities"
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.xiaoyu.schoolelive.FileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                tools:replace="android:resource"
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/rc_file_path" />
-        </provider>
+        <!-- <provider -->
+        <!-- tools:replace="android:authorities" -->
+        <!-- android:name="android.support.v4.content.FileProvider" -->
+        <!-- android:authorities="com.xiaoyu.schoolelive.FileProvider" -->
+        <!-- android:exported="false" -->
+        <!-- android:grantUriPermissions="true"> -->
+        <!-- <meta-data -->
+        <!-- tools:replace="android:resource" -->
+        <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
+        <!-- android:resource="@xml/rc_file_path" /> -->
+        <!-- </provider> -->
+
+        <activity android:name=".activities.SearchDetail_Activity"></activity>
     </application>
 
 </manifest>

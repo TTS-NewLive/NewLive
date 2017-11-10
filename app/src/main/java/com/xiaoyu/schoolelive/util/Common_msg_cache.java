@@ -70,7 +70,6 @@ public  class Common_msg_cache {
     }
     public static void refresh_goods_Caches(Context context,ArrayList<Goods> goods){
         set_goods_Cache(context,goods);
-
     }
 //    public static void set_login_true(Context context,String uid){//设置当前用户登录状态并将帐号保存在缓存中
 //        ACache aCache = ACache.get(context);

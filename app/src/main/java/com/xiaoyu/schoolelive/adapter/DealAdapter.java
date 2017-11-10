@@ -71,12 +71,11 @@ public class DealAdapter extends BaseAdapter {
             holder.goodsName = (TextView) convertView.findViewById(R.id.deal_goods_name);
             holder.goodsPrice = (TextView) convertView.findViewById(R.id.deal_goods_price);
             holder.topImage = (ImageView) convertView.findViewById(R.id.deal_goods_topimage);
-
-
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        initImageLoader(mContext);
         // 适配数据
         holder.dealDate.setText(mDatas.get(i).getSellDate());
         holder.sellerName.setText(mDatas.get(i).getSellerName());
@@ -84,7 +83,6 @@ public class DealAdapter extends BaseAdapter {
         holder.goodsPrice.setText(mDatas.get(i).getGoodsPrice());
         ImageLoader.getInstance().displayImage(mDatas.get(i).getTopImage(),
                 holder.topImage, NORMAL_OPTION);//设置图片
-
         return convertView;
     }
 

@@ -68,7 +68,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
     private Button publish_goods;
     private EditText goods_name;//货物名称
     private EditText goods_description;//货物介绍
-    private EditText goods_price, goods_kyj_price, goods_jp_baseprice, goods_jp_minadd;
+    private EditText goods_price, goods_kyj_price, goods_jp_nowprice, goods_jp_minadd;
     private int goods_type;
     private List<String> photos = null;
     private ProgressDialog progressDialog;
@@ -119,7 +119,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
         goods_description = (EditText) findViewById(R.id.goods_description);
         goods_price = (EditText) findViewById(R.id.goods_price);
 
-        goods_jp_baseprice = (EditText) findViewById(R.id.goods_jp_baseprice);
+        goods_jp_nowprice = (EditText) findViewById(R.id.goods_jp_baseprice);
         goods_jp_minadd = (EditText) findViewById(R.id.goods_jp_minadd);
 
         goods_kyj_price = (EditText) findViewById(R.id.goods_kyj_price);
@@ -199,7 +199,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
         publish_goods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Login_cache.get_login_status(getApplicationContext()).equals("true")){
+                if (Login_cache.get_login_status(getApplicationContext()).equals("false")) {
                     Toast.makeText(getApplicationContext(), "请先登录", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -220,8 +220,8 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
                         return;
                     }
                 } else if (select.equals("竞拍")) {
-                    if (goods_jp_minadd.getText().toString().isEmpty() || goods_jp_minadd.getText().toString().isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "商品价格不能为空", Toast.LENGTH_SHORT).show();
+                    if (goods_jp_minadd.getText().toString().isEmpty() || goods_jp_nowprice.getText().toString().isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "商品价格或最低加价不能为空", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -235,6 +235,8 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.show();
                 upLoad_goods_info();
+                publish_goods.setClickable(false);
+                publish_goods.setFocusable(false);
             }
         });
     }
@@ -282,14 +284,14 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
         final String date = sDateFormat.format(new java.util.Date());//得到系统当前时间作为商品的id
         mbody.addFormDataPart("goods_id", date);
         mbody.addFormDataPart("goods_name", goods_name.getText().toString());//发送商品名称
-        mbody.addFormDataPart("uid",Login_cache.get_login_username(getApplicationContext()));//发送当前登录用户的id
-
+        mbody.addFormDataPart("uid", Login_cache.get_login_username(getApplicationContext()));//发送当前登录用户的id
         if (goods_type == ConstantUtil.Goods_Type_ykj) {
             mbody.addFormDataPart("goods_price", goods_price.getText().toString());//发送商品价格
         } else if (goods_type == ConstantUtil.Goods_Type_yj) {
             mbody.addFormDataPart("goods_price", goods_price.getText().toString());//发送商品价格
         } else if (goods_type == ConstantUtil.Goods_Type_pai) {
-            mbody.addFormDataPart("goods_price", goods_price.getText().toString());//发送商品价格
+            mbody.addFormDataPart("goods_price", goods_jp_nowprice.getText().toString());//发送商品价格
+            mbody.addFormDataPart("bids", goods_jp_minadd.getText().toString());//发送商品价格
         }
 
         mbody.addFormDataPart("goods_description", goods_description.getText().toString());//发送商品描述
@@ -298,7 +300,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
                 .url(url)
                 .post(requestBody)
                 .build();
-        final okhttp3.OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder();
+        final OkHttpClient.Builder httpBuilder = new OkHttpClient.Builder();
         OkHttpClient okHttpClient = httpBuilder
                 //设置超时
                 .connectTimeout(3000, TimeUnit.MINUTES)
@@ -342,8 +344,8 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
         if (goods_type == ConstantUtil.Goods_Type_ykj) {
             goods.setPrice(Integer.valueOf(goods_price.getText().toString()));
         } else if (goods_type == ConstantUtil.Goods_Type_pai) {
-            goods.setBasePrice(Integer.valueOf(goods_jp_baseprice.getText().toString()));
-            goods.setNowPrice(Integer.valueOf(goods_jp_baseprice.getText().toString()));
+            //goods.setBasePrice(Integer.valueOf(goods_jp_nowprice.getText().toString()));
+            goods.setNowPrice(Integer.valueOf(goods_jp_nowprice.getText().toString()));
             goods.setMinPrice(Integer.valueOf(goods_jp_minadd.getText().toString()));
         } else if (goods_type == ConstantUtil.Goods_Type_yj) {
             goods.setRefPrice(Integer.valueOf(goods_kyj_price.getText().toString()));

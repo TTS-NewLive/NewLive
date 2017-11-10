@@ -1,6 +1,7 @@
 package com.xiaoyu.schoolelive.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
@@ -12,18 +13,35 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiaoyu.schoolelive.R;
+import com.xiaoyu.schoolelive.adapter.DealAdapter;
 import com.xiaoyu.schoolelive.base.BaseSlideBack;
 import com.xiaoyu.schoolelive.custom.CustomFindHistory;
+import com.xiaoyu.schoolelive.data.Deal;
+import com.xiaoyu.schoolelive.util.ConstantUtil;
+import com.xiaoyu.schoolelive.util.HttpUtil;
 import com.xiaoyu.schoolelive.util.RecordSQLiteOpenHelper;
+import com.xiaoyu.schoolelive.util.WidgetUtil;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+/*
+*  搜索详情界面:
+*
+* */
 public class FindActivity extends BaseSlideBack {
 
     private EditText find_et;
@@ -32,6 +50,7 @@ public class FindActivity extends BaseSlideBack {
     private TextView find_history_clear;
     private RecordSQLiteOpenHelper helper = new RecordSQLiteOpenHelper(this);
     private SQLiteDatabase db;
+    private List<Deal> mDatas = new ArrayList<>();
     private BaseAdapter adapter;
 
     @Override
@@ -60,14 +79,37 @@ public class FindActivity extends BaseSlideBack {
                     if (find_et.getText().toString().equals("")) {
                         Toast.makeText(FindActivity.this, "不能为空！", Toast.LENGTH_SHORT).show();
                     }else{
-                        boolean hasData = hasData(find_et.getText().toString().trim());
+                       /* boolean hasData = hasData(find_et.getText().toString().trim());
                         if (!hasData) {
                             insertData(find_et.getText().toString().trim());
                             queryData("");
                         }
                         // TODO 根据输入的内容模糊查询商品，并跳转到另一个界面，由你自己去实现
-                        Toast.makeText(FindActivity.this, find_et.getText().toString(), Toast.LENGTH_SHORT).show();
-                        find_et.setText("");
+                        //Toast.makeText(FindActivity.this, find_et.getText().toString(), Toast.LENGTH_SHORT).show();
+                       // find_et.setText("");*/
+
+                        //跳转到搜索详情界面
+
+                        String key = find_et.getText().toString();
+                        //去除关键词中的空格和引号
+                        String final_key =WidgetUtil.str_yinhao(WidgetUtil.str_trim(key));
+                        RequestBody requestBody = new FormBody.Builder()
+                                .add("key",final_key)//关键字
+                                .build();
+                        HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "search_goods.php", requestBody, new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                 //将搜索到的结果发送到SearchDetail_Activity中去
+                                 Intent intent = new Intent(FindActivity.this,SearchDetail_Activity.class);
+                                 intent.putExtra("search_result",response.body().string());
+                                 startActivity(intent);
+                            }
+                        });
                     }
                 }
                 return false;
@@ -105,9 +147,9 @@ public class FindActivity extends BaseSlideBack {
             }
         });
         // 插入数据，便于测试，否则第一次进入没有数据怎么测试呀？
-//        Date date = new Date();
-//        long time = date.getTime();
-//        insertData("Leo" + time);
+        Date date = new Date();
+        long time = date.getTime();
+      insertData("Leo" + time);
 
         // 第一次进入查询所有的历史记录
         queryData("");
@@ -125,14 +167,17 @@ public class FindActivity extends BaseSlideBack {
      * 模糊查询数据
      */
     private void queryData(String tempName) {
-        Cursor cursor = helper.getReadableDatabase().rawQuery(
-                "select id as _id,name from records where name like '%" + tempName + "%' order by id desc ", null);
+//        Cursor cursor = helper.getReadableDatabase().rawQuery(
+  //              "select id as _id,name from records where name like '%" + tempName + "%' order by id desc ", null);
         // 创建adapter适配器对象
-        adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
-                new int[] { android.R.id.text1 }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+       // adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
+         //       new int[] { android.R.id.text1 }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        DealAdapter dealAdapter = new DealAdapter(getApplicationContext(),mDatas);
+
         // 设置适配器
-        fint_history_list.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        fint_history_list.setAdapter(dealAdapter);
+        dealAdapter.notifyDataSetChanged();
     }
     /**
      * 检查数据库中是否已经有该条记录
