@@ -3,35 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="#ffffff"
-        android:orientation="horizontal"
-        android:paddingRight="16dp">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:padding="10dp"
-            android:src="@drawable/back" />
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:drawableLeft="@drawable/find"
-            android:drawablePadding="12dp"
-            android:gravity="start|center_vertical"
-            android:hint="看看大家都在搜索什么"
-            android:imeOptions="actionSearch"
-            android:maxLength="20"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-    </LinearLayout>
+    <include
+        layout="@layout/include_toolbar2"
+        />
     <ListView
         android:id="@+id/find_detail_list"
         android:layout_width="match_parent"

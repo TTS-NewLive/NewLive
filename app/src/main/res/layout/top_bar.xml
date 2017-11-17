@@ -11,7 +11,4 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:background="@drawable/back_button_icon" />
-
-
-
 </RelativeLayout>

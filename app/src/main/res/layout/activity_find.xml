@@ -15,6 +15,7 @@
         android:paddingRight="16dp">
 
         <ImageView
+            android:id="@+id/search_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"

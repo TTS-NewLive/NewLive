@@ -6,13 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.xiaoyu.schoolelive.activities.UPActivity">
 
-    <TextView
-        android:text="《《用户使用协议说明》》"
-        android:textSize="22dp"
-        android:layout_margin="10dp"
-        android:textAlignment="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <include
+        layout="@layout/include_toolbar2"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

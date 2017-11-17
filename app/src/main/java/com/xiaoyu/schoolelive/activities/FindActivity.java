@@ -13,7 +13,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +43,6 @@ import okhttp3.Response;
 
 /*
 *  搜索详情界面:
-*
 * */
 public class FindActivity extends BaseSlideBack {
 
@@ -52,6 +54,7 @@ public class FindActivity extends BaseSlideBack {
     private SQLiteDatabase db;
     private List<Deal> mDatas = new ArrayList<>();
     private BaseAdapter adapter;
+    private ImageView search_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,12 @@ public class FindActivity extends BaseSlideBack {
         // 初始化控件
         initView();
         // 清空搜索历史
+        search_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         find_history_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,39 +88,24 @@ public class FindActivity extends BaseSlideBack {
                     if (find_et.getText().toString().equals("")) {
                         Toast.makeText(FindActivity.this, "不能为空！", Toast.LENGTH_SHORT).show();
                     }else{
-                       /* boolean hasData = hasData(find_et.getText().toString().trim());
+                        boolean hasData = hasData(find_et.getText().toString().trim());
                         if (!hasData) {
                             insertData(find_et.getText().toString().trim());
                             queryData("");
                         }
                         // TODO 根据输入的内容模糊查询商品，并跳转到另一个界面，由你自己去实现
                         //Toast.makeText(FindActivity.this, find_et.getText().toString(), Toast.LENGTH_SHORT).show();
-                       // find_et.setText("");*/
+                       // find_et.setText("");
 
                         //跳转到搜索详情界面
 
                         String key = find_et.getText().toString();
                         //去除关键词中的空格和引号
-                        String final_key =WidgetUtil.str_yinhao(WidgetUtil.str_trim(key));
-                        RequestBody requestBody = new FormBody.Builder()
-                                .add("key",final_key)//关键字
-                                .build();
-                        HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "search_goods.php", requestBody, new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
+                        search(key);
 
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                 //将搜索到的结果发送到SearchDetail_Activity中去
-                                 Intent intent = new Intent(FindActivity.this,SearchDetail_Activity.class);
-                                 intent.putExtra("search_result",response.body().string());
-                                 startActivity(intent);
-                            }
-                        });
                     }
                 }
+                find_et.setText("");
                 return false;
             }
         });
@@ -127,8 +121,6 @@ public class FindActivity extends BaseSlideBack {
             public void afterTextChanged(Editable s) {
                 if (s.toString().trim().length() == 0) {
                     find_history_tv.setText("搜索历史");
-                } else {
-                    find_history_tv.setText("搜索结果");
                 }
                 String tempName = find_et.getText().toString();
                 // 根据tempName去模糊查询数据库中有没有数据
@@ -146,10 +138,6 @@ public class FindActivity extends BaseSlideBack {
                 // TODO 获取到item上面的文字，根据该关键字跳转到另一个页面查询，由你自己去实现
             }
         });
-        // 插入数据，便于测试，否则第一次进入没有数据怎么测试呀？
-        Date date = new Date();
-        long time = date.getTime();
-      insertData("Leo" + time);
 
         // 第一次进入查询所有的历史记录
         queryData("");
@@ -167,17 +155,23 @@ public class FindActivity extends BaseSlideBack {
      * 模糊查询数据
      */
     private void queryData(String tempName) {
-//        Cursor cursor = helper.getReadableDatabase().rawQuery(
-  //              "select id as _id,name from records where name like '%" + tempName + "%' order by id desc ", null);
+       Cursor cursor = helper.getReadableDatabase().rawQuery(
+                "select id as _id,name from records where name like '%" + tempName + "%' order by id desc ", null);
         // 创建adapter适配器对象
 
-       // adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
-         //       new int[] { android.R.id.text1 }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        DealAdapter dealAdapter = new DealAdapter(getApplicationContext(),mDatas);
-
+        adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
+                new int[] { android.R.id.text1 }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         // 设置适配器
-        fint_history_list.setAdapter(dealAdapter);
-        dealAdapter.notifyDataSetChanged();
+        fint_history_list.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        fint_history_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+                search(tv.getText().toString());
+            }
+        });
     }
     /**
      * 检查数据库中是否已经有该条记录
@@ -202,11 +196,29 @@ public class FindActivity extends BaseSlideBack {
         find_history_tv = (TextView) findViewById(R.id.find_history_tv);
         fint_history_list = (CustomFindHistory) findViewById(R.id.find_history_list);
         find_history_clear = (TextView) findViewById(R.id.find_history_clear);
-
+        search_back = (ImageView)findViewById(R.id.search_back);
         // 调整EditText左边的搜索按钮的大小
         Drawable drawable = getResources().getDrawable(R.drawable.find);
         drawable.setBounds(0, 0, 60, 60);// 第一0是距左边距离，第二0是距上边距离，60分别是长宽
         find_et.setCompoundDrawables(drawable, null, null, null);// 只放左边
+    }
+    private void search(String key){
+        String final_key =WidgetUtil.str_yinhao(WidgetUtil.str_trim(key));
+        RequestBody requestBody = new FormBody.Builder()
+                .add("key",final_key)//关键字
+                .build();
+        HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "search_goods.php", requestBody, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //将搜索到的结果发送到SearchDetail_Activity中去
+                Intent intent = new Intent(FindActivity.this,SearchDetail_Activity.class);
+                intent.putExtra("search_result",response.body().string());
+                startActivity(intent);
+            }
+        });
     }
 }
 

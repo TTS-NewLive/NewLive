@@ -3,6 +3,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.xiaoyu.schoolelive.data.Deal;
+import com.xiaoyu.schoolelive.data.Footer;
 import com.xiaoyu.schoolelive.data.Goods;
 import com.xiaoyu.schoolelive.data.PartJob;
 import com.xiaoyu.schoolelive.data.Publish;
@@ -92,6 +93,15 @@ public  class Common_msg_cache {
 //        return now_uid;
 //    }
 
-
+    public static void set_footer_Cache(Context context, ArrayList<Footer> list){//序列化之后才能添加
+        ACache aCache = ACache.get(context);//添加对足迹的缓存
+        aCache.put("footer_cache",list);
+    }
+    public static ArrayList<Footer> get_footer_Cache(Context context){
+        ACache aCache = ACache.get(context);
+        ArrayList<Footer> cache_footer = (ArrayList<Footer>)aCache.getAsObject("footer_cache");
+        //得到足迹的缓存
+        return cache_footer;
+    }
 
 }

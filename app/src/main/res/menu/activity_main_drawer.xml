@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/order"
-            android:icon="@drawable/ic_foot32"
+            android:icon="@drawable/ic_history32"
             android:title="订单历史" />
         <item
             android:id="@+id/history"

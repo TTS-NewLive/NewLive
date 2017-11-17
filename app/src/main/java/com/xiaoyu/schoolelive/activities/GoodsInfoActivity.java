@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,7 +52,7 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.mob.MobSDK.getContext;
+import static com.xiaoyu.schoolelive.R.id.goods_name;
 
 /**
  * Created by NeekChaw on 2017-07-29.
@@ -61,6 +62,7 @@ import static com.mob.MobSDK.getContext;
 public class GoodsInfoActivity extends AppCompatActivity implements View.OnClickListener {
     public static int ONSELL = 0;//未销售
     public static int SELLED = 1;//已销售
+    public static int ITEM_NUMBER = 5;//加载数目
     //竞拍
     //private TextView mBasePrice;
     private TextView mNowPrice;
@@ -94,8 +96,72 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
     private View mGoodsYJ;
     private View mGoodIntro_view;
     private BGABanner mGoodsImages;
-    final String[] mItems = new String[]{"卖家详情", "举报","联系卖家"};
+    private ImageView callSeller;
+    final String[] mItems = new String[]{"卖家详情", "举报", "联系卖家"};
     final String[] mAgainstItems = new String[]{"泄露隐私", "人身攻击", "淫秽色情", "垃圾广告", "敏感信息", "其他"};
+    private Handler handler4 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            mAdapter.getList().clear();
+            String bid_data = (String) msg.obj;
+            try {
+                JSONArray jsonArray = new JSONArray(bid_data);
+                for (int i = 0; i < (jsonArray.length() <= ITEM_NUMBER ? jsonArray.length() : ITEM_NUMBER); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String bider_id = jsonObject.getString("uid");//竞拍者id
+                    String bid_time = jsonObject.getString("date");//交易时间
+                    String bid_price = jsonObject.getString("bid_price");//商品名称
+                    String user_head = jsonObject.getString("photo");//头像
+                    String user_name = jsonObject.getString("name");//昵称
+                    JPUser jpUser = new JPUser();
+                    final String str = ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(user_head);
+                    jpUser.setImage(str);
+                    jpUser.setName(user_name);
+                    jpUser.setPrice(bid_price);
+                    jpUser.setDate(bid_time);
+                    jpUser.setUid(bider_id);
+                    mData.add(jpUser);
+                }
+                //直接更新页面当前价格
+                mNowPrice.setText(mData.get(0).getPrice());
+                mAdapter.notifyDataSetChanged();
+                // 广播通知
+                Intent intent = new Intent("refreshGoods");
+                intent.putExtra("change", "yes");
+                LocalBroadcastManager.getInstance(GoodsInfoActivity.this).sendBroadcast(intent);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    private Handler handler3 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //判断交易是否成功
+            String result = (String) msg.obj;
+            if (String.valueOf(1).equals(result)) {
+                Toast.makeText(GoodsInfoActivity.this, "竞价发布成功", Toast.LENGTH_SHORT).show();
+            } else if (String.valueOf(2).equals(result)) {
+                Toast.makeText(GoodsInfoActivity.this, "竞价发布失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+    private Handler handler5 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //判断交易是否成功
+            String result = (String) msg.obj;
+            if (String.valueOf(1).equals(result)) {
+                Toast.makeText(GoodsInfoActivity.this, "添加数据库成功", Toast.LENGTH_SHORT).show();
+            } else if (String.valueOf(2).equals(result)) {
+                Toast.makeText(GoodsInfoActivity.this, "添加数据库失败", Toast.LENGTH_SHORT).show();
+            }else if(String.valueOf(3).equals(result)){
+                Toast.makeText(GoodsInfoActivity.this, "更新数据库成功", Toast.LENGTH_SHORT).show();
+                //清除缓存
+            }
+        }
+    };
     private Handler handler2 = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -107,8 +173,12 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 btn_ykj.setBackgroundResource(R.drawable.btn_selled_bg);
                 btn_ykj.setText("已售");
                 //这句话是小黑写的
-                Common_msg_cache.get_goods_Cache(getContext()).get(getIntent().getIntExtra("tmp_position", SELLED)).setIsSell(SELLED);
+                Common_msg_cache.get_goods_Cache(getApplicationContext()).get(getIntent().getIntExtra("tmp_position", SELLED)).setIsSell(SELLED);
                 Toast.makeText(GoodsInfoActivity.this, "交易成功", Toast.LENGTH_SHORT).show();
+
+                //交易成功后向卖家发送通知
+                push_message(get_sell_id());
+
             } else if (String.valueOf(2).equals(result)) {
                 Toast.makeText(GoodsInfoActivity.this, "交易失败", Toast.LENGTH_SHORT).show();
             }
@@ -147,9 +217,36 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_goods_info);
         goods = new Goods();
         initView();
-
+        footerDataGet();
     }
+    public void footerDataGet(){
+        if (Login_cache.get_login_status(getApplicationContext()).equals("true")){
+            String buyerId = Login_cache.get_login_username(getApplicationContext());
+            String goodsId = goods_id;
+            String time=String.valueOf(System.currentTimeMillis());
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("buyer_id",buyerId)
+                    .add("goods_id", goodsId)
+                    .add("systime",time)
+                    .build();
+            HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "goods_footer.php", requestBody, new okhttp3.Callback() {
+                public void onFailure(Call call, IOException e) {
+                    Toast.makeText(GoodsInfoActivity.this, "网络好像出问题了...", Toast.LENGTH_SHORT).show();
+                }
 
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseData = response.body().string();
+                    String result = responseData;
+                    Log.d("GoodsInfo", result);
+                    Message msg = Message.obtain();
+                    msg.obj = result;
+                    handler5.sendMessage(msg);
+                }
+            });
+        }else {
+            Toast.makeText(GoodsInfoActivity.this,"没登录，不存历史记录",Toast.LENGTH_SHORT).show();
+        }
+    }
     public void initView() {
         Intent intent = getIntent();
 
@@ -158,6 +255,7 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         //setGoodsName(intent.getStringExtra("tmp_goodsname"));
         //设置商品类型
         setGoodsType(intent, intent.getIntExtra("tmp_goodsType", 0));
+        init_callsell(intent.getIntExtra("tmp_goodsType", 0));
 
         //设置商品名称
         setGoodsName(intent.getIntExtra("tmp_goodsType", 0), intent.getStringExtra("tmp_goodsname"));
@@ -181,12 +279,39 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         mAdapter = new GoodsJPAdapter(this, mData);
         // 为评论列表设置适配器
         mListView.setAdapter(mAdapter);
+        //初始化列表数据
+        initData();
         btn_more.setOnClickListener(this);
         btn_pai.setOnClickListener(this);
         btn_ykj.setOnClickListener(this);
         btn_yj_mai.setOnClickListener(this);
         btn_yj_chat.setOnClickListener(this);
         btn_back.setOnClickListener(this);
+    }
+
+    public void initData() {
+        //String uid = Login_cache.get_login_username(getApplicationContext());
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("goods_id", goods_id)
+                .build();
+        HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "query_bid.php", requestBody, new Callback() {
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(GoodsInfoActivity.this, "网络好像出问题了...", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onResponse(Call call, Response response) throws IOException {
+                String str = response.body().string();
+                Message msg = new Message();
+                String result = str;
+                msg.obj = str;
+                handler4.sendMessage(msg);
+            }
+        });
+    }
+
+    public void getData() {
+
     }
 
     public void findById() {
@@ -218,6 +343,8 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
         mPrice = (TextView) findViewById(R.id.yikoujia_price);
         //可议价价格
         mRefPrice = (TextView) findViewById(R.id.yj_price);
+
+
 
     }
 
@@ -287,17 +414,18 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 
     public void setGoodsName(int type, String goodsName) {
         if (type == ConstantUtil.Goods_Type_pai) {
-            mGoodsName = (TextView) mGoodsPai.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsPai.findViewById(goods_name);
             mGoodsName.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_yj) {
-            mGoodsName = (TextView) mGoodsYJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYJ.findViewById(goods_name);
             mGoodsName.setText(goodsName);
         } else if (type == ConstantUtil.Goods_Type_ykj) {
-            mGoodsName = (TextView) mGoodsYKJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYKJ.findViewById(goods_name);
             mGoodsName.setText(goodsName);
         }
 
     }
+
 
     public void setGoodsIntro(int type, String goodsName) {
         if (type == ConstantUtil.Goods_Type_pai) {
@@ -341,7 +469,7 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
 
     public void setGoodsType(Intent intent, int type) {
         if (type == ConstantUtil.Goods_Type_pai) {
-            mGoodsName = (TextView) mGoodsPai.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsPai.findViewById(goods_name);
             mGoodsPai.setVisibility(View.VISIBLE);
             if (intent.getIntExtra("tmp_isSell", ONSELL) == SELLED) {
                 //btn_pai.setClickable(false);
@@ -351,7 +479,7 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 btn_pai.setText("已售");
             }
         } else if (type == ConstantUtil.Goods_Type_yj) {
-            mGoodsName = (TextView) mGoodsYJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYJ.findViewById(goods_name);
             mGoodsYJ.setVisibility(View.VISIBLE);
             if (intent.getIntExtra("tmp_isSell", ONSELL) == SELLED) {
                 // btn_yj_mai.setClickable(false);
@@ -361,7 +489,7 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 btn_yj_mai.setText("已售");
             }
         } else if (type == ConstantUtil.Goods_Type_ykj) {
-            mGoodsName = (TextView) mGoodsYKJ.findViewById(R.id.goods_name);
+            mGoodsName = (TextView) mGoodsYKJ.findViewById(goods_name);
             mGoodsYKJ.setVisibility(View.VISIBLE);
             if (intent.getIntExtra("tmp_isSell", ONSELL) == SELLED) {
                 //btn_ykj.setClickable(false);
@@ -371,6 +499,39 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 btn_ykj.setText("已售");
             }
         }
+    }
+    public void init_callsell(int type){
+        if (type == ConstantUtil.Goods_Type_pai) {
+            callSeller =(ImageView) mGoodsPai.findViewById(R.id.callSeller);
+        } else if (type == ConstantUtil.Goods_Type_ykj) {
+            callSeller =(ImageView) mGoodsYKJ.findViewById(R.id.callSeller);
+        }
+        callSeller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Login_cache.get_login_status(getApplicationContext()).equals("true")) {
+                    Toast.makeText(GoodsInfoActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    if(get_sell_id().equals(Login_cache.get_login_username(getApplicationContext()))){
+                        Toast.makeText(GoodsInfoActivity.this, "您正是该商品的主人", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (RongIM.getInstance() != null) {
+                        //不让卖家的电话号码全部显示,中间4位用*表示
+                        // String encryption_sell_id = get_sell_id().substring(0,3)+"****"+get_sell_id().substring(7,11);//加密
+                        //String sell_id = get_sell_id();
+                        // RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this,now_id.equals(sell_id)?now_id:sell_id,now_id.equals(sell_id)?now_id:sell_id);
+                        String encryption_sell_id = get_sell_id().substring(0, 3) + "****" + get_sell_id().substring(7, 11);
+                        RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this, get_sell_id(), encryption_sell_id);
+                    }
+
+                }
+
+            }
+
+
+        });
     }
 
     public void setGoodsPrice(Intent intent, int type) {
@@ -476,17 +637,21 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                         against.getWindow().setAttributes(params);
                         break;
                     case 2:
-                        if(!Login_cache.get_login_status(getApplicationContext()).equals("true")){
-                            Toast.makeText(GoodsInfoActivity.this,"请先登录", Toast.LENGTH_SHORT).show();
+                        if (!Login_cache.get_login_status(getApplicationContext()).equals("true")) {
+                            Toast.makeText(GoodsInfoActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
                             return;
-                        }else {
-                            if(RongIM.getInstance() != null){
+                        } else {
+                            if(get_sell_id().equals(Login_cache.get_login_username(getApplicationContext()))){
+                                Toast.makeText(GoodsInfoActivity.this, "您正是该商品的主人", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            if (RongIM.getInstance() != null) {
                                 //不让卖家的电话号码全部显示,中间4位用*表示
                                 // String encryption_sell_id = get_sell_id().substring(0,3)+"****"+get_sell_id().substring(7,11);//加密
                                 //String sell_id = get_sell_id();
                                 // RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this,now_id.equals(sell_id)?now_id:sell_id,now_id.equals(sell_id)?now_id:sell_id);
-                                String encryption_sell_id =  get_sell_id().substring(0,3)+"****"+get_sell_id().substring(7,11);
-                                RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this,get_sell_id(),encryption_sell_id);
+                                String encryption_sell_id = get_sell_id().substring(0, 3) + "****" + get_sell_id().substring(7, 11);
+                                RongIM.getInstance().startPrivateChat(GoodsInfoActivity.this, get_sell_id(), encryption_sell_id);
                             }
 
                         }
@@ -548,8 +713,14 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                 }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sendPrice(yourPrice);
-                dialog.dismiss();
+                if (Login_cache.get_login_status(getApplicationContext()).equals("true")) {
+                    sendPrice(yourPrice);
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(GoodsInfoActivity.this, "请登录账号", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+
             }
         }).create().show();
     }
@@ -576,7 +747,7 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
                         //.add("seller_id", sellerId)
                         .add("goods_id", goodsId)
                         .build();
-                HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "goods_deal.php", requestBody, new okhttp3.Callback() {
+                HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "goods_deal.php", requestBody, new Callback() {
                     public void onFailure(Call call, IOException e) {
                         Toast.makeText(GoodsInfoActivity.this, "网络好像出问题了...", Toast.LENGTH_SHORT).show();
                     }
@@ -621,13 +792,17 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
      */
     public void sendPrice(EditText myPrcie) {
         View view = View.inflate(this, R.layout.custom_dialog_pai, null);
+        int yoursPrice = Integer.parseInt(myPrcie.getText().toString());
+        int bids = Integer.parseInt(mMinPrice.getText().toString());
+        int nowPrice = Integer.parseInt(mNowPrice.getText().toString());
         if (myPrcie.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "报价不能为空！", Toast.LENGTH_SHORT).show();
+        } else if (yoursPrice < nowPrice + bids) {
+            Toast.makeText(getApplicationContext(), "不符合报价规则！", Toast.LENGTH_SHORT).show();
+            myPrcie.setText("");
         } else {
             // 生成报价数据
             JPUser jpUser = new JPUser();
-            jpUser.setImage(R.drawable.icon_default_head);
-            jpUser.setName("出价者" + (mData.size() + 1));
             jpUser.setPrice(myPrcie.getText().toString());
 
             //获取当前时间
@@ -635,21 +810,64 @@ public class GoodsInfoActivity extends AppCompatActivity implements View.OnClick
             Date date = new Date(System.currentTimeMillis());
             String str = format.format(date);
             jpUser.setDate(str);
+            jpUser.setUid(Login_cache.get_login_username(getApplicationContext()));
+            jpUser.setGoods_id(goods_id);
+            SimpleDateFormat sDateFormat = new SimpleDateFormat("00yyyyMMddhhmmss");
+            //得到系统当前时间作为竞拍的id
+            String bid_id = sDateFormat.format(new java.util.Date());
 
-            mAdapter.addMyPrice(jpUser);
+
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("bid_id", bid_id)
+                    .add("goods_id", jpUser.getGoods_id())
+                    .add("uid", jpUser.getUid())
+                    .add("bid_price", jpUser.getPrice())
+                    .build();
+            HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "insert_bid.php", requestBody, new Callback() {
+                public void onFailure(Call call, IOException e) {
+                    Toast.makeText(GoodsInfoActivity.this, "网络好像出问题了...", Toast.LENGTH_SHORT).show();
+                }
+
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseData = response.body().string();
+                    String result = responseData;
+                    Message msg = Message.obtain();
+                    msg.obj = result;
+                    handler3.sendMessage(msg);
+                    initData();
+                }
+            });
             // 发送完，清空输入框
             myPrcie.setText("");
-
-            Toast.makeText(getApplicationContext(), "报价成功！", Toast.LENGTH_SHORT).show();
 
             // 隐藏输入法，然后暂存当前输入框的内容，方便下次使用
 //            InputMethodManager im = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 //            im.hideSoftInputFromWindow(myPrcie.getWindowToken(), 0);
         }
     }
+
     //得到卖家的id
-    private String get_sell_id(){
+    private String get_sell_id() {
         return getIntent().getStringExtra("tmp_uid");
+    }
+
+    public void push_message(String sell_id){
+        RequestBody requestBody = new FormBody.Builder()
+                .add("sell_id",get_sell_id())
+                .build();
+        HttpUtil.sendHttpRequest("http://39.106.31.44/jpush/push_message.php",requestBody, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.i("GoodsInfoActivity",response.body().string());
+            }
+        });
+
+
     }
 
 }

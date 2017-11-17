@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,8 +98,8 @@ public class WaterFallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void fillBannerItem(BGABanner banner, ImageView itemView, String model, int position) {
                     Glide.with(mContext)
                             .load(model)
-                            .placeholder(R.drawable.gif_ad_holder)
-                            .error(R.mipmap.ic_launcher)
+                            .placeholder(R.drawable.loading)
+                            .error(R.drawable.loading)
                             .centerCrop()
                             .dontAnimate()
                             .into(itemView);
@@ -152,6 +151,8 @@ public class WaterFallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView mGoodsName;
         @Bind(R.id.goods_thum_price)
         TextView mGoodsPrice;
+        @Bind(R.id.post_time)
+        TextView mPostTime;
 
         public ViewHolder(View view) {
             //需要设置super
@@ -190,6 +191,7 @@ public class WaterFallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Goods goods = mData.get(position - 1);
             //获取封面图片
             ImageBean bean = goods.getTopImages();
+            ((ViewHolder)holder).mPostTime.setText(goods.getPost_time());
             //获取商品类型
             //int GoodsStyle = goods.getGoodsStyle();
             //setGoodsStyle((ViewHolder) holder, GoodsStyle);
@@ -203,8 +205,15 @@ public class WaterFallAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             //((ViewHolder) holder).mGoodsPageViews.setText(goods.getPageViews() + "");
             //显示图片
 
-            ImageLoader.getInstance().displayImage(bean.getImgsrc(),
-                    ((ViewHolder) holder).mImageView, NORMAL_OPTION);//设置图片
+            //ImageLoader.getInstance().displayImage(bean.getImgsrc(),
+               //     ((ViewHolder) holder).mImageView, NORMAL_OPTION);//设置图片
+            Glide.with(mContext)
+                    .load(bean.getImgsrc())
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.loading)
+                    .centerCrop()
+                    .dontAnimate()
+                    .into(((ViewHolder) holder).mImageView);
 
             // 如果设置了回调，则设置点击事件
             if (onItemClickListener != null) {

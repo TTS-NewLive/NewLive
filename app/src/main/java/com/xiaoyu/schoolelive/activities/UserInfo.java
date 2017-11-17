@@ -40,6 +40,7 @@ import com.xiaoyu.schoolelive.util.ConstantUtil;
 import com.xiaoyu.schoolelive.util.HttpUtil;
 import com.xiaoyu.schoolelive.util.Login_cache;
 import com.xiaoyu.schoolelive.util.User_cache;
+import com.xiaoyu.schoolelive.util.WidgetUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,7 +67,6 @@ import okhttp3.Response;
 
 public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
     class MyHandler extends Handler {
-
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             Bundle b = msg.getData();
@@ -81,7 +81,8 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     String real_name = b.getString("real_name");
                     String signature = b.getString("signature");
                     //得到图片的真实路径
-                    String photo_path = str_trim(ConstantUtil.SERVICE_PATH + photo);
+                    String photo_path = WidgetUtil.str_trim(ConstantUtil.SERVICE_PATH + photo);
+                    Login_cache.set_photo(getApplicationContext(),photo_path);
                     Glide.with(UserInfo.this)//将选中的图片放到imageview中
                             .load(photo_path)
                             .into(mPhoto);
@@ -93,6 +94,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     } else if (String.valueOf("1").equals(sex)) {
                         custom_sex.setInfo_menu_info("女");
                     }
+
                     User user_cache = new User();
                     user_cache.setName(name);
                     user_cache.setPhoto(photo_path);
@@ -146,14 +148,24 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     }
                 case 5:
                     init();//初始化信息
-
             }
         }
     }
+    Handler handler2 = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            String photo = (String) msg.obj;
+            String name = Login_cache.get_login_username(getApplicationContext());
+            String real_path = WidgetUtil.str_trim(ConstantUtil.SERVICE_PATH+photo);
+            RongIM.getInstance().refreshUserInfoCache(new io.rong.imlib.model.UserInfo(uid, name, Uri.parse(real_path)));
+            Login_cache.set_photo(getApplicationContext(),real_path);
+            Toast.makeText(UserInfo.this, "更新图像成功,传入融云服务器", Toast.LENGTH_SHORT).show();
+        }
+    };
     public static final int TAKE_PHOTO = 1;
     private Uri imageUri;
     public String uid ;//用户的id
-    private CustomBar custom_fname, custom_about, custom_fav, custom_tname, custom_sex;
+    private CustomBar custom_fname, custom_about, custom_tname, custom_sex;
     private CircleImageView mPhoto;
     private LinearLayout mPhotoLinearLayout;
     private static int output_X = 600;
@@ -190,6 +202,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                 finish();
             }
         });
+
         handler = new MyHandler();
 
         mPhoto = (CircleImageView) findViewById(R.id.mPhoto);//图像对象
@@ -205,8 +218,6 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
         custom_tname.setOnClickListener(this);
         custom_sex = (CustomBar) findViewById(R.id.custom_sex);//性别
         custom_sex.setOnClickListener(this);
-
-
        // get_uid = getIntent();
        // uid = get_uid.getStringExtra("uid");
         uid = Login_cache.get_login_username(getApplicationContext());
@@ -218,26 +229,29 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
         mHeigh = screenSize[1];
 
         //初始化个人信息界面  缓存中没有从服务器读取
-        if(User_cache.get_user_info_Cache(getApplicationContext())!= null){
+        if(User_cache.get_user_info_Cache(getApplicationContext())!= null) {
             User get_cache_user = User_cache.get_user_info_Cache(UserInfo.this);
-            String photo = get_cache_user.getPhoto();
-            String name = get_cache_user.getName();
-            String real_name = get_cache_user.getReal_name();
-            String signature = get_cache_user.getSignature();
-            String sex = get_cache_user.getSex();
-            Glide.with(UserInfo.this)//将选中的图片放到imageview中
-                    .load(photo)
-                    .error(R.drawable.qq_login)
-                    .into(mPhoto);
-            custom_fname.setInfo_menu_info(name);
-            custom_about.setInfo_menu_info(signature);
-            custom_tname.setInfo_menu_info(real_name);
-            if (String.valueOf("0").equals(sex)) {
-                custom_sex.setInfo_menu_info("男");
-            } else if (String.valueOf("1").equals(sex)) {
-                custom_sex.setInfo_menu_info("女");
+            if (get_cache_user.getUid() == Login_cache.get_login_username(getApplicationContext())) {
+                String photo = get_cache_user.getPhoto();
+                Login_cache.set_photo(getApplicationContext(), WidgetUtil.str_trim(ConstantUtil.SERVICE_PATH+photo));
+
+                String name = get_cache_user.getName();
+                String real_name = get_cache_user.getReal_name();
+                String signature = get_cache_user.getSignature();
+                String sex = get_cache_user.getSex();
+
+                custom_fname.setInfo_menu_info(name);
+                custom_about.setInfo_menu_info(signature);
+                custom_tname.setInfo_menu_info(real_name);
+                if (String.valueOf("0").equals(sex)) {
+                    custom_sex.setInfo_menu_info("男");
+                } else if (String.valueOf("1").equals(sex)) {
+                    custom_sex.setInfo_menu_info("女");
+                }
+                RongIM.getInstance().refreshUserInfoCache(new io.rong.imlib.model.UserInfo(uid, name, Uri.parse(photo)));
+            } else if (get_cache_user.getUid() != Login_cache.get_login_username(getApplicationContext())) {
+                init();
             }
-            RongIM.getInstance().refreshUserInfoCache(new io.rong.imlib.model.UserInfo(uid, name, Uri.parse(photo)));
         }else{
             init();//进入个人信息界面的时候初始话信息
         }
@@ -506,6 +520,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     String real_name = jsonObject.getString("real_name");
                     String sex = jsonObject.getString("sex");
                     Message msg = Message.obtain();
+
                     Bundle bundle = new Bundle();
                     bundle.putString("photo",photo);
                     bundle.putInt("index",0);//0代表初始话数据
@@ -513,6 +528,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                     bundle.putString("signature",signature);
                     bundle.putString("real_name",real_name);
                     bundle.putString("sex",sex);
+
                     msg.setData(bundle);
                     handler.sendMessage(msg);
                 }catch (Exception e){
@@ -531,10 +547,8 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
         //你需要使用系统提供的startActivityForResult(Intent intent,int requestCode)方法打开新的Activity
         startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
     }
-
     // 启动手机相机拍摄照片作为头像
     private void  choseHeadImageFromCameraCapture() {
-
         //旧方法
       /*  Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -566,7 +580,6 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, TAKE_PHOTO);
     }
-
     /**
      * 检查设备是否存在SDCard的工具方法
      */
@@ -579,6 +592,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
             return false;
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         // 用户没有进行有效的设置操作，返回
@@ -639,7 +653,6 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
                }
                 break;
-
         }
     }
     /**
@@ -660,9 +673,7 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
         intent.putExtra("return-data", true);
         bigImg = BitmapUtils.decodeUri(UserInfo.this, uri, mWidth, mHeigh);
         startActivityForResult(intent, CODE_RESULT_REQUEST);
-
     }
-
     /**
      * 提取保存裁剪之后的图片数据，并设置头像部分的View
      */
@@ -718,7 +729,12 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
             }
 
             public void onResponse(Call call, Response response) throws IOException {
-                init();//拍照修改头像之后初始化数据
+                String data = response.body().string();
+                if(!data.substring(0,1).equals("0")){
+                    Message msg = Message.obtain();
+                    msg.obj = data;
+                    handler2.sendMessage(msg);
+                }
             }
         });
 
@@ -740,6 +756,4 @@ public  class UserInfo extends BaseSlideBack implements View.OnClickListener {
             Log.e("token",e.getMessage());
         }
     }
-
-
 }

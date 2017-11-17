@@ -7,12 +7,6 @@
         android:title="搜索"
         app:showAsAction="always"
         />
-    <!--<item-->
-        <!--android:id="@+id/action_refresh"-->
-        <!--android:title="刷新"-->
-        <!--app:showAsAction="ifRoom"-->
-        <!--android:icon="@drawable/refresh"-->
-        <!--/>-->
     <!--  showAsAction的几个取值：
         1.always:永远显示在ToolBar中，如果屏幕空间不够则不显示
         2.ifRoom:空间足够就显示ToolBar中，不足就显示在菜单中

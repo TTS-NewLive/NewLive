@@ -4,15 +4,11 @@
         "source": "C:\\Users\\xiaoyao\\Desktop\\NewLive\\IMKit\\src\\main\\res\\xml\\rc_file_path.xml"
     },
     {
-        "merged": "C:\\android\\code\\NewLive\\IMKit\\build\\intermediates\\res\\merged\\debug\\xml\\rc_file_path.xml",
-        "source": "C:\\android\\code\\NewLive\\IMKit\\src\\main\\res\\xml\\rc_file_path.xml"
-    },
-    {
         "merged": "D:\\NewLive\\IMKit\\build\\intermediates\\res\\merged\\debug\\xml\\rc_file_path.xml",
         "source": "D:\\NewLive\\IMKit\\src\\main\\res\\xml\\rc_file_path.xml"
     },
     {
-        "merged": "E:\\work\\NewLive\\IMKit\\build\\intermediates\\res\\merged\\debug\\xml\\rc_file_path.xml",
-        "source": "E:\\work\\NewLive\\IMKit\\src\\main\\res\\xml\\rc_file_path.xml"
+        "merged": "F:\\NewLive\\IMKit\\build\\intermediates\\res\\merged\\debug\\xml\\rc_file_path.xml",
+        "source": "F:\\NewLive\\IMKit\\src\\main\\res\\xml\\rc_file_path.xml"
     }
 ]

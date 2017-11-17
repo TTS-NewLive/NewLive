@@ -115,6 +115,15 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/ui_10_dip">
 
+        <ImageView
+            android:id="@+id/callSeller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/ui_10_dip"
+            android:layout_marginLeft="@dimen/ui_10_dip"
+            android:src="@drawable/callseller48" />
+
         <Button
             android:id="@+id/btn_pai"
             android:layout_width="match_parent"

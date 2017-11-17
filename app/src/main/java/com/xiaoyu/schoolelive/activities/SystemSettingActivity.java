@@ -156,7 +156,7 @@ public class SystemSettingActivity extends BaseSlideBack {
                             });
                             false_button.setOnClickListener(new View.OnClickListener() {
                                 public void onClick(View v) {
-
+                                    dialog.hide();
                                 }
                             });
                         }else{
@@ -168,7 +168,8 @@ public class SystemSettingActivity extends BaseSlideBack {
                         startActivity(i);
                         break;
                     case 2://关于我们
-
+                        Intent intent = new Intent(SystemSettingActivity.this,AboutUsActivity.class);
+                        startActivity(intent);
                         break;
                     case 3://消除缓存
 
@@ -176,7 +177,6 @@ public class SystemSettingActivity extends BaseSlideBack {
                 }
             }
         });
-
         backLogin = (Button)findViewById(R.id.sysset_back_login);
         backLogin.setOnClickListener(new View.OnClickListener() {
             @Override

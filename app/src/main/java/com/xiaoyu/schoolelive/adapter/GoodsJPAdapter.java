@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.xiaoyu.schoolelive.R;
 import com.xiaoyu.schoolelive.data.JPUser;
 
@@ -24,6 +25,11 @@ public class GoodsJPAdapter extends BaseAdapter {
     public GoodsJPAdapter(Context context, List<JPUser> data) {
         this.mContext = context;
         this.mDatas = data;
+    }
+
+
+    public List<JPUser> getList() {
+        return mDatas;
     }
 
     @Override
@@ -62,11 +68,15 @@ public class GoodsJPAdapter extends BaseAdapter {
         // 适配数据
         holder.userName.setText(mDatas.get(i).getName());
         holder.date.setText(mDatas.get(i).getDate());
-        holder.userImage.setImageResource(mDatas.get(i).getImage());
+        Glide.with(mContext)//将选中的图片放到imageview 中
+                .load(mDatas.get(i).getImage())
+                .error(R.drawable.ic_default_head32)
+                .into(holder.userImage);
         holder.price.setText(mDatas.get(i).getPrice());
 
         return convertView;
     }
+
 
     /**
      * 添加一条出价

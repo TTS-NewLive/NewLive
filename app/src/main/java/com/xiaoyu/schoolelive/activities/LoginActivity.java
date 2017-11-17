@@ -47,32 +47,38 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
             Bundle b = msg.getData();
             String data = b.getString("data");
             long uid = b.getLong("uid");
-            if(String.valueOf(-1).equals(data)){//如果返回-1 说明该用户不存在
-                Toast.makeText(LoginActivity.this,"该用户不存在", Toast.LENGTH_SHORT).show();
-            }else{
-                if(password.equals(data)){
-                    Toast.makeText(LoginActivity.this,"登陆成功", Toast.LENGTH_SHORT).show();
+            if (String.valueOf(-1).equals(data)) {//如果返回-1 说明该用户不存在
+                Toast.makeText(LoginActivity.this, "该用户不存在", Toast.LENGTH_SHORT).show();
+            } else {
+                if (password.equals(data)) {
+                    Toast.makeText(LoginActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
                     Login_cache.set_login_true(getApplicationContext());
-                    Login_cache.set_login_username(getApplicationContext(),mUserwordView.getText().toString());
-                    if(remember_pass.isChecked()){//如果用户点击了记住密码
-                        Login_cache.set_login_password(getApplicationContext(),mPasswordView.getText().toString());
+                    Login_cache.set_login_username(getApplicationContext(), mUserwordView.getText().toString());
+                    if (remember_pass.isChecked()) {//如果用户点击了记住密码
+                        Login_cache.set_login_password(getApplicationContext(), mPasswordView.getText().toString());
                         //修改记住状态
                         Login_cache.set_login_chose_true(getApplicationContext());
-                    }else{
+                    } else {
                         //修改记住状态
                         Login_cache.set_login_chose_false(getApplicationContext());
                     }
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    intent.putExtra("login_to_main","success");
-                    intent.putExtra("uid",String.valueOf(uid));
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("login_to_main", "success");
+                    intent.putExtra("uid", String.valueOf(uid));
                     startActivity(intent);//跳转到主界面并传递id
-                }else{
-                    Toast.makeText(LoginActivity.this,"密码不正确", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, "密码不正确", Toast.LENGTH_SHORT).show();
                 }
 
             }
+//            login.setFocusable(true);
+//            login.setClickable(true);
+           login.setBackgroundResource(R.drawable.btn_bg);
+           login.setText("登录");
         }
     }
+
     public String getPwd = null;//判断用户是否存在，得到用户的真正密码
     private Button login;
     private Button register;
@@ -80,7 +86,7 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
     private RequestBody requestBody;//发送请求对象
     private Handler handler;
     private String password;
-    private EditText mUserwordView,mPasswordView;
+    private EditText mUserwordView, mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -124,19 +130,23 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
     //账号最短长度
     private boolean isEmailValid(String userword) {
         //TODO: Replace this with your own logic
         return userword.length() >= 6;
     }
+
     //密码最短长度
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() >= 6;
     }
+
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
     }
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -153,15 +163,18 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
                 // a primary email address if the user hasn't specified one.
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
+
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
     }
+
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
                 ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
         };
     }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -210,11 +223,11 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
         //初始化记住状态
         // 如果是没选择记住，则为空
         // 如果选择的记住，则从缓存进行读取赋值
-        if (Login_cache.get_login_chose_status(getApplicationContext())==null || Login_cache.get_login_chose_status(getApplicationContext()).equals("false")){
+        if (Login_cache.get_login_chose_status(getApplicationContext()) == null || Login_cache.get_login_chose_status(getApplicationContext()).equals("false")) {
             remember_pass.setChecked(false);
             mUserwordView.setText("");
             mPasswordView.setText("");
-        }else {
+        } else {
             remember_pass.setChecked(true);
             mUserwordView.setText(Login_cache.get_login_username(getApplicationContext()));
             mPasswordView.setText(Login_cache.get_login_password(getApplicationContext()));
@@ -235,7 +248,10 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
         });
     }
 
-    private void login(){
+    private void login() {
+        login.setClickable(false);
+        login.setBackgroundResource(R.drawable.btn_selled_bg);
+        login.setText("正在登录中...");
         // 重置错误
         mUserwordView.setError(null);
         mPasswordView.setError(null);
@@ -264,20 +280,22 @@ public class LoginActivity extends BaseSlideBack implements LoaderManager.Loader
             focusView.requestFocus();
         } else {
             //showProgress(true);
+
             requestBody = new FormBody.Builder()
                     .add("uid", String.valueOf(userword))
-                    .add("password",password)
+                    .add("password", password)
                     .build();
-            HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH+"login.php", requestBody, new okhttp3.Callback() {
+            HttpUtil.sendHttpRequest(ConstantUtil.SERVICE_PATH + "login.php", requestBody, new okhttp3.Callback() {
                 public void onFailure(Call call, IOException e) {
-                    Log.e("error",e.getMessage());
+                    Log.e("error", e.getMessage());
                 }
+
                 public void onResponse(Call call, Response response) throws IOException {
                     String responseData = response.body().string();
                     getPwd = responseData;
                     Message msg = Message.obtain();
                     Bundle bundle = new Bundle();
-                    bundle.putString("data",getPwd);
+                    bundle.putString("data", getPwd);
                     bundle.putLong("uid", Long.parseLong(userword));
                     msg.setData(bundle);
                     handler.sendMessage(msg);

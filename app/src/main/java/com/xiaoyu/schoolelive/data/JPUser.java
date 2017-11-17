@@ -5,16 +5,43 @@ package com.xiaoyu.schoolelive.data;
  */
 
 public class JPUser {
-    int image;
+    String image;
+    int status;
     String price;
     String date;
     String name;
+    String uid;
+    String goods_id;
 
-    public int getImage() {
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getGoods_id() {
+        return goods_id;
+    }
+
+    public void setGoods_id(String goods_id) {
+        this.goods_id = goods_id;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

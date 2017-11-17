@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/ui_10_dip"
+    android:background="@color/deal_item">
+    <ImageView
+        android:id="@+id/footer_goods_topimage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="@dimen/ui_5_dip"
+        android:background="@color/view_color" />
+    <TextView
+        android:id="@+id/footer_goods_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:typeface="serif"
+        android:text="这是商品名称"
+        android:textSize="18sp"
+        android:textColor="#515151"
+        android:layout_above="@+id/textView3"
+        android:layout_toEndOf="@+id/footer_goods_topimage"
+        android:layout_marginBottom="12dp" />
+    <TextView
+        android:id="@+id/footer_goods_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¥1000"
+        android:textColor="#515151"
+        android:typeface="serif"
+        android:layout_alignBaseline="@+id/footer_goods_name"
+        android:layout_alignBottom="@+id/footer_goods_name"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/footer_goods_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="商品信息"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@id/footer_goods_topimage"/>
+
+</RelativeLayout>

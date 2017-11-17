@@ -6,7 +6,6 @@
     android:orientation="horizontal"
     android:paddingTop="@dimen/ui_10_dip"
     android:paddingBottom="@dimen/ui_10_dip">
-
     <com.thinkcool.circletextimageview.CircleTextImageView
         android:id="@+id/sysInform_image"
         android:layout_width="48dp"

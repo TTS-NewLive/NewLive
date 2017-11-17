@@ -26,6 +26,7 @@ public class Goods implements Serializable{
     public String goodsStartDate;
     public String goodsEndDate;
     public String goods_id;
+    public String post_time;
     public int goodsType;
     public int goodsStyle;
     public int pageViews;//浏览量
@@ -201,5 +202,13 @@ public class Goods implements Serializable{
 
     public int getIsSell() {
         return isSell;
+    }
+
+    public void setPost_time(String post_time) {
+        this.post_time = post_time;
+    }
+
+    public String getPost_time() {
+        return post_time;
     }
 }

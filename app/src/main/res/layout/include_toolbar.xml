@@ -5,10 +5,10 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="48dp">
-    <ImageView
+    <com.xiaoyu.schoolelive.custom.CircleImageView
         android:id="@+id/intoLogin"
-        android:src="@drawable/menu_info_dw"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
         android:layout_width="36dp"
         android:layout_height="36dp" />
     <TextView
@@ -24,7 +24,15 @@
         android:id="@+id/find"
         android:src="@drawable/find"
         android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
         android:layout_width="36dp"
         android:layout_height="36dp" />
+    <ImageView
+        android:id="@+id/add_inform"
+        android:src="@drawable/ic_add"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/find" />
 </RelativeLayout>

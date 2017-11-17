@@ -6,6 +6,7 @@ package com.xiaoyu.schoolelive.util;
 
 public class ConstantUtil {
     public static String SERVICE_PATH = "http://39.106.31.44/xiaoyu/";
+    public static int SHOW_FLOATBUTTON = 1;
 
     /**
      * 兼职类别
@@ -110,6 +111,6 @@ public class ConstantUtil {
     public static int USERALBUM_ACTIVITY = 2;
     public static int USERCENTET_ACTIVITY = 3;
 
-    public static int Goods_Piece = 5;//每次刷新加载商品件数
+    public static int Goods_Piece = 6;//每次刷新加载商品件数
 }
 

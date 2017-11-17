@@ -74,4 +74,14 @@ public class Login_cache {
         String token = aCache.getAsString(uid);
         return token;
     }
+
+    public static void set_photo(Context context,String str){
+        ACache aCache = ACache.get(context);
+        aCache.put("photo",str);
+    }
+    public static String get_photo(Context context){
+        ACache aCache = ACache.get(context);
+        String photo = aCache.getAsString("photo");
+        return photo;
+    }
 }

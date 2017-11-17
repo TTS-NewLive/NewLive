@@ -1,13 +1,5 @@
 [
     {
-        "merged": "C:\\android\\code\\NewLive\\IMKit\\build\\intermediates\\res\\merged\\release\\color\\rc_btn_file_list_send.xml",
-        "source": "C:\\android\\code\\NewLive\\IMKit\\src\\main\\res\\color\\rc_btn_file_list_send.xml"
-    },
-    {
-        "merged": "E:\\work\\NewLive\\IMKit\\build\\intermediates\\res\\merged\\release\\color\\rc_btn_file_list_send.xml",
-        "source": "E:\\work\\NewLive\\IMKit\\src\\main\\res\\color\\rc_btn_file_list_send.xml"
-    },
-    {
         "merged": "D:\\NewLive\\IMKit\\build\\intermediates\\res\\merged\\release\\color\\rc_btn_file_list_send.xml",
         "source": "D:\\NewLive\\IMKit\\src\\main\\res\\color\\rc_btn_file_list_send.xml"
     },

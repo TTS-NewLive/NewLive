@@ -1,13 +1,18 @@
 package com.xiaoyu.schoolelive.activities;
 
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -72,7 +77,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
     private int goods_type;
     private List<String> photos = null;
     private ProgressDialog progressDialog;
-
+    List<String> permissionList;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -97,6 +102,7 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("toAddGoods", 2);
                     startActivity(intent);
+                    finish();
                     break;
 
             }
@@ -128,8 +134,29 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
         iv_crop = (ImageView) findViewById(R.id.iv_crop);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         photoAdapter = new PhotoAdapter(this, selectedPhotos);
-
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL));
+        permissionList = new ArrayList<String>();//权限组(一次申请多个权限)
+        if (ContextCompat.checkSelfPermission(UserAddGoodsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//相等就说明授权
+            {
+                permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(UserAddGoodsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//相等就说明授权
+            {
+                permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+        }
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(UserAddGoodsActivity.this, permissions, 1);
+        } else {
+            photo_picker();
+        }
+
+
+    }
+
+    private void photo_picker() {
         recyclerView.setAdapter(photoAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
@@ -151,8 +178,6 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
                         }
                     }
                 }));
-
-
     }
 
     @Override
@@ -235,8 +260,6 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.show();
                 upLoad_goods_info();
-                publish_goods.setClickable(false);
-                publish_goods.setFocusable(false);
             }
         });
     }
@@ -257,6 +280,8 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
     }
 
     private void upLoad_goods_info() {
+        publish_goods.setClickable(false);
+        publish_goods.setFocusable(false);
         //上传商品信息到服务器(图文混合)
         final String url = ConstantUtil.SERVICE_PATH + "goods_upload.php";
         MultipartBody.Builder mbody = new MultipartBody.Builder().setType(MultipartBody.FORM);
@@ -315,25 +340,29 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Goods goods = new Goods();
-                String path = response.body().string();//得到返回来的封面路径
-                String str = ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(path);
-                ImageBean bean = new ImageBean();
-                bean.setImgsrc(str);
-                goods.setGoods_id(date);
-                goods.setTopImage(bean);//设置封面图片
-                goods.setGoodsName(goods_name.getText().toString());//设置名称
-                goods.setGoodsIntro(goods_description.getText().toString());//设置介绍
-                //goods.setPageViews(Integer.valueOf(goods_price.getText().toString()));  //设置商品浏览量
-                goods.setGoodsStyle(ConstantUtil.Goods_New); //设置顶热新商品属性
-                goods.setGoodsType(goods_type);
-                setGoodsPrice(goods, goods_type);
-                Common_msg_cache.add_goods_Cache(getApplicationContext(), goods);
-                //请求到数据之后在handler里面更新ui
-                Message msg = new Message();
-                msg.what = 4;
-                handler.sendMessage(msg);
-
+                String data = response.body().string();
+                if (data.substring(0, 1).equals("error")) {
+                    Toast.makeText(UserAddGoodsActivity.this, "发布失败!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Goods goods = new Goods();
+                    String path = data;//得到返回来的封面路径
+                    String str = ConstantUtil.SERVICE_PATH + WidgetUtil.str_trim(path);
+                    ImageBean bean = new ImageBean();
+                    bean.setImgsrc(str);
+                    goods.setGoods_id(date);
+                    goods.setTopImage(bean);//设置封面图片
+                    goods.setGoodsName(goods_name.getText().toString());//设置名称
+                    goods.setGoodsIntro(goods_description.getText().toString());//设置介绍
+                    //goods.setPageViews(Integer.valueOf(goods_price.getText().toString()));  //设置商品浏览量
+                    goods.setGoodsStyle(ConstantUtil.Goods_New); //设置顶热新商品属性
+                    goods.setGoodsType(goods_type);
+                    setGoodsPrice(goods, goods_type);
+                    Common_msg_cache.add_goods_Cache(getApplicationContext(), goods);
+                    //请求到数据之后在handler里面更新ui
+                    Message msg = new Message();
+                    msg.what = 4;
+                    handler.sendMessage(msg);
+                }
             }
         });
 
@@ -349,6 +378,26 @@ public class UserAddGoodsActivity extends BaseSlideBack implements RadioGroup.On
             goods.setMinPrice(Integer.valueOf(goods_jp_minadd.getText().toString()));
         } else if (goods_type == ConstantUtil.Goods_Type_yj) {
             goods.setRefPrice(Integer.valueOf(goods_kyj_price.getText().toString()));
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1://调用相册的权限
+                if (grantResults.length > 0) {
+                    for (int result : grantResults) {
+                        if (result != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(UserAddGoodsActivity.this, "必须同意所有权限才能使用本程序", Toast.LENGTH_LONG).show();
+                            finish();
+                            return;
+                        }
+                    }
+                    photo_picker();
+                } else {
+                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
     }
 }
